@@ -1,38 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TransactionsTable from "../../components/Tables/TransactionsTable";
-
-const sampleTransactions = [
-  {
-    id: "TXN001",
-    clientName: "Ali Hasan",
-    serviceName: "Student Visa",
-    totalFee: 2000,
-    paid: 1000,
-    due: 1000,
-    paymentDate: "2025-11-25",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    id: "TXN002",
-    clientName: "Sara Khan",
-    serviceName: "Work Visa",
-    totalFee: 3000,
-    paid: 3000,
-    due: 0,
-    paymentDate: "2025-11-20",
-    paymentMethod: "Credit Card",
-  },
-];
+import { Link } from "react-router";
+import axios from "axios";
 
 const Transactions = () => {
-  const [transactions, setTransactions] = useState(sampleTransactions);
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          "http://localhost:3000/api/v1/transaction/getTransactions",
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            withCredentials: true,
+          }
+        );
+
+        console.log(res.data, "API Response");
+
+        // FIXED
+        setTransactions(res.data.data);
+      } catch (err) {
+        console.error("Error fetching transactions:", err);
+      }
+    };
+
+    fetchData();
+  }, []); // FIXED: added dependency array
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Transactions</h1>
         <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-          + Add Transaction
+          <Link to="/dashboard/services/transactions/addtransaction">+ Add Transaction</Link>
         </button>
       </div>
 

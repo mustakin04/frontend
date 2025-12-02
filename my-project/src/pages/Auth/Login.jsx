@@ -32,7 +32,7 @@ const Login = () => {
       // token save
       localStorage.setItem("token", res.data.token);
 
-      navigate("/"); // dashboard redirect
+      navigate("/dashboard"); // dashboard redirect
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }

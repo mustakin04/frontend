@@ -15,7 +15,7 @@ const Navbar = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log(res,"llsdjalj")
+        // console.log(res,"llsdjalj")
         setUser(res.data);
       } catch (err) {
         console.error("Error fetching user:", err);

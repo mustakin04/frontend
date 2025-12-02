@@ -409,7 +409,7 @@ export default function AddClientModal() {
       {/* Buttons */}
       <div className="col-span-2 flex justify-end gap-4 mt-4">
         <button className="px-4 py-2 bg-gray-400 text-white rounded">
-          <Link to="/sales/clients">Cancel</Link>
+          <Link to="/dashboard/sales/clients">Cancel</Link>
         </button>
 
         <button

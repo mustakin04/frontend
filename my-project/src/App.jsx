@@ -16,11 +16,14 @@ import Register from "./pages/Auth/Register";
 import PrivateRoute from "./router/PrivateRoute";
 import AddLeadModal from "./components/Modals/AddLeadModal";
 import AddClientModal from "./components/Modals/AddClientModal";
+import ExternalClients from "./pages/Sales/ExternalClients";
+import AddExternalClientModal from "./components/Modals/AddExternalClientModal";
+import AddTransactionModal from "./components/Modals/AddTransactionModal";
 
 function App() {
   const router = createBrowserRouter([
     {
-    path: "/register",
+    path: "/",
     element: <Register />,
   },
     {
@@ -28,23 +31,26 @@ function App() {
       element: <Login />,
     },
     {
-      path: "/",
+      path: "/dashboard",
       element: (
         <PrivateRoute>
           <MainLayout />
         </PrivateRoute>
       ),
       children: [
-        { path: "/", element: <Dashboard /> },
+        { path: "/dashboard", element: <Dashboard /> },
 
         // Sales
-        { path: "/sales/leads", element: <Leads /> },
-        { path: "/sales/clients", element: <Clients /> },
-        { path: "/sales/clients/addClient", element: <AddClientModal /> },
+        { path: "/dashboard/sales/leads", element: <Leads /> },
+        { path: "/dashboard/sales/clients", element: <Clients /> },
+        { path: "/dashboard/sales/clients/addClient", element: <AddClientModal /> },
+        {path:"/dashboard/sales/external" ,element:<ExternalClients/>},
+        {path:"/dashboard/sales/external/addExternalClient" ,element:<AddExternalClientModal/>},
 
         // Services
-        { path: "/services/transactions", element: <Transactions /> },
-        { path: "/services/applications", element: <Applications /> },
+        { path: "/dashboard/services/transactions", element: <Transactions /> },
+        { path: "/dashboard/services/transactions/addtransaction", element: <AddTransactionModal /> },
+        { path: "/dashboard/services/applications", element: <Applications /> },
       ],
     },
   ]);

@@ -40,7 +40,7 @@ const Clients = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Clients</h1>
         <Link
-          to="/sales/clients/addClient"
+          to="/dashboard/sales/clients/addClient"
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
         >
           + Add Client
@@ -66,5 +66,4 @@ const Clients = () => {
     </div>
   );
 };
-
 export default Clients;
