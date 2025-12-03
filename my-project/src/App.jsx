@@ -19,6 +19,7 @@ import AddClientModal from "./components/Modals/AddClientModal";
 import ExternalClients from "./pages/Sales/ExternalClients";
 import AddExternalClientModal from "./components/Modals/AddExternalClientModal";
 import AddTransactionModal from "./components/Modals/AddTransactionModal";
+import ApplicationModal from './components/Modals/ApplicationModal';
 
 function App() {
   const router = createBrowserRouter([
@@ -51,6 +52,7 @@ function App() {
         { path: "/dashboard/services/transactions", element: <Transactions /> },
         { path: "/dashboard/services/transactions/addtransaction", element: <AddTransactionModal /> },
         { path: "/dashboard/services/applications", element: <Applications /> },
+        { path:"/dashboard/services/applications/addapplication",element:<ApplicationModal/>},
       ],
     },
   ]);

@@ -10,9 +10,22 @@ const ApplicationsTable = ({ applications }) => {
           <tr>
             {[
               "Application ID",
-              "Client Name",
-              "Visa Type",
-              "Submission Date",
+              "Account",
+              "Entity",
+              "Ownership",
+              "Client",
+              "Transaction",
+              "Title",
+              "Stage",
+              "Type",
+              "Location",
+              "University",
+              "Course",
+              "Intake Date",
+              "Priority",
+              "Due Date",
+              "Responsible Type",
+              "Responsible",
               "Status",
               "Next Follow-up",
               "Notes",
@@ -30,11 +43,27 @@ const ApplicationsTable = ({ applications }) => {
 
         <tbody className="divide-y divide-gray-200">
           {applications.map((app, idx) => (
-            <tr key={app.id || idx} className={clsx(idx % 2 === 0 ? "bg-white" : "bg-gray-50")}>
+            <tr
+              key={app.id || idx}
+              className={clsx(idx % 2 === 0 ? "bg-white" : "bg-gray-50")}
+            >
               <td className="px-6 py-4 whitespace-nowrap">{app.id}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{app.clientName}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{app.visaType}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{app.submissionDate}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.account}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.entity}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.ownership}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.client}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.transaction}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.title}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.stage}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.type}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.location}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.university}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.course}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.intakeDate}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.priority}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.dueDate}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.responsibleType}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{app.responsible}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span
                   className={clsx(
@@ -51,9 +80,15 @@ const ApplicationsTable = ({ applications }) => {
               <td className="px-6 py-4 whitespace-nowrap">{app.nextFollowUp}</td>
               <td className="px-6 py-4 whitespace-nowrap">{app.notes}</td>
               <td className="px-6 py-4 whitespace-nowrap flex gap-2">
-                <button className="text-blue-500 hover:text-blue-700"><FiEye /></button>
-                <button className="text-green-500 hover:text-green-700"><FiEdit2 /></button>
-                <button className="text-red-500 hover:text-red-700"><FiTrash2 /></button>
+                <button className="text-blue-500 hover:text-blue-700">
+                  <FiEye />
+                </button>
+                <button className="text-green-500 hover:text-green-700">
+                  <FiEdit2 />
+                </button>
+                <button className="text-red-500 hover:text-red-700">
+                  <FiTrash2 />
+                </button>
               </td>
             </tr>
           ))}
