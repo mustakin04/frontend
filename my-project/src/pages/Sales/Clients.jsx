@@ -27,6 +27,7 @@ const Clients = () => {
           }
         );
         setClients(res.data);
+        // console.log(res.data,"client")
       } catch (err) {
         console.error("Failed to fetch clients:", err);
       }

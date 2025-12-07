@@ -20,6 +20,7 @@ import ExternalClients from "./pages/Sales/ExternalClients";
 import AddExternalClientModal from "./components/Modals/AddExternalClientModal";
 import AddTransactionModal from "./components/Modals/AddTransactionModal";
 import ApplicationModal from './components/Modals/ApplicationModal';
+import DashboardPage from "./pages/Dashboard/DashboardPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -39,7 +40,7 @@ function App() {
         </PrivateRoute>
       ),
       children: [
-        { path: "/dashboard", element: <Dashboard /> },
+        { path: "/dashboard", element: <DashboardPage /> },
 
         // Sales
         { path: "/dashboard/sales/leads", element: <Leads /> },

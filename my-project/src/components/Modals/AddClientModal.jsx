@@ -1,11 +1,46 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router";
+import { motion } from "framer-motion";
 
 export default function AddClientModal() {
-  const [formData, setFormData] = useState({});
+  const initialState = {
+    account: "",
+    entity: "",
+    type: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    nationality: "",
+    currentLocation: "",
+    altName: "",
+    dob: "",
+    civilStatus: "",
+    address: "",
+    admin1: "",
+    admin2: "",
+    altPhone: "",
+    prefService: "",
+    stage: "",
+    respType: "",
+    refType: "",
+    referredBy: "",
+    nextAction: "",
+    nextActionDate: "",
+    agentPromo: "",
+    active: "",
+    description: "",
+  };
+
+  const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const inputBase =
+    "w-full p-3 rounded-xl border-[3px] border-slate-800 bg-white shadow-[6px_6px_0_0_#1e293b] focus:outline-none focus:ring-4 focus:ring-indigo-300";
+
+  const selectBase = inputBase;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,7 +55,7 @@ export default function AddClientModal() {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "http://localhost:3000/api/v1/client/createClient", // ✔ correct route
+        "http://localhost:3000/api/v1/client/createClient",
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -28,38 +63,8 @@ export default function AddClientModal() {
         }
       );
 
-     console.log(res,)
-
-      // ✔ Reset all client fields  
-      setFormData({
-        account: "",
-        entity: "",
-        type: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        nationality: "",
-        currentLocation: "",
-        altName: "",
-        dob: "",
-        civilStatus: "",
-        address: "",
-        admin1: "",
-        admin2: "",
-        altPhone: "",
-        prefService: "",
-        stage: "",
-        respType: "",
-        refType: "",
-        referredBy: "",
-        nextAction: "",
-        nextActionDate: "",
-        agentPromo: "",
-        active: "",
-        description: "",
-      });
-
+      console.log("Client added:", res.data);
+      setFormData(initialState);
     } catch (err) {
       console.error("Error creating client:", err);
       setError(err.response?.data?.message || err.message);
@@ -69,357 +74,93 @@ export default function AddClientModal() {
   };
 
   return (
-    <div className="p-6 px-12 max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
-      
-      <div className="col-span-2">
-        <h2 className="text-xl font-semibold">New Client</h2>
-      </div>
-
-      {error && (
-        <div className="col-span-2 text-red-600 font-semibold">
-          {error}
-        </div>
-      )}
-
-      {/* Account */}
-      <div>
-        <label className="block mb-1">Account *</label>
-        <input
-          name="account"
-          value={formData.account || ""}
-          onChange={handleChange}
-          placeholder="Apprent Global"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Entity */}
-      <div>
-        <label className="block mb-1">Entity *</label>
-        <input
-          name="entity"
-          value={formData.entity || ""}
-          onChange={handleChange}
-          placeholder="Branch"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Type */}
-      <div>
-        <label className="block mb-1">Type</label>
-        <select
-          name="type"
-          value={formData.type || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="p-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 border-[3px] border-slate-800 rounded-2xl bg-[#fefaf5] shadow-[10px_10px_0_0_#1e293b]"
+    >
+      <div className="col-span-2 flex justify-between items-center mb-4">
+        <h2 className="text-3xl font-extrabold text-slate-900">New Client</h2>
+        <motion.button
+          whileTap={{ scale: 0.92 }}
+          className="px-6 py-2 text-slate-900 bg-white border-[3px] border-slate-800 rounded-xl shadow-[5px_5px_0_0_#1e293b]"
         >
-          <option value="">Select Type</option>
-          <option value="Individual">Individual</option>
-        </select>
-      </div>
-
-      {/* First Name */}
-      <div>
-        <label className="block mb-1">First / Middle Name *</label>
-        <input
-          name="firstName"
-          value={formData.firstName || ""}
-          onChange={handleChange}
-          placeholder="Enter Name"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Last Name */}
-      <div>
-        <label className="block mb-1">Last Name *</label>
-        <input
-          name="lastName"
-          value={formData.lastName || ""}
-          onChange={handleChange}
-          placeholder="Enter Last Name"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Email */}
-      <div>
-        <label className="block mb-1">Email Address *</label>
-        <input
-          name="email"
-          value={formData.email || ""}
-          onChange={handleChange}
-          placeholder="Enter Email"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Phone */}
-      <div>
-        <label className="block mb-1">Phone Number *</label>
-        <input
-          name="phone"
-          value={formData.phone || ""}
-          onChange={handleChange}
-          placeholder="Phone Number"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Nationality */}
-      <div>
-        <label className="block mb-1">Nationality *</label>
-        <select
-          name="nationality"
-          value={formData.nationality || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Country</option>
-        </select>
-      </div>
-
-      {/* Current Location */}
-      <div>
-        <label className="block mb-1">Current Location *</label>
-        <select
-          name="currentLocation"
-          value={formData.currentLocation || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Country</option>
-        </select>
-      </div>
-
-      {/* Alternative Name */}
-      <div>
-        <label className="block mb-1">Alternative Name</label>
-        <input
-          name="altName"
-          value={formData.altName || ""}
-          onChange={handleChange}
-          placeholder="Enter Alternative Name"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Date of Birth */}
-      <div>
-        <label className="block mb-1">Date of Birth</label>
-        <input
-          type="date"
-          name="dob"
-          value={formData.dob || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Civil Status */}
-      <div>
-        <label className="block mb-1">Civil Status</label>
-        <select
-          name="civilStatus"
-          value={formData.civilStatus || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Civil Status</option>
-        </select>
-      </div>
-
-      {/* Address */}
-      <div>
-        <label className="block mb-1">Address</label>
-        <input
-          name="address"
-          value={formData.address || ""}
-          onChange={handleChange}
-          placeholder="Enter Address"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Admin Region 1 */}
-      <div>
-        <label className="block mb-1">Administrative Region 1</label>
-        <select
-          name="admin1"
-          value={formData.admin1 || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Admin Region</option>
-        </select>
-      </div>
-
-      {/* Admin Region 2 */}
-      <div>
-        <label className="block mb-1">Administrative Region 2</label>
-        <select
-          name="admin2"
-          value={formData.admin2 || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Admin Region</option>
-        </select>
-      </div>
-
-      {/* Alternative Phone */}
-      <div>
-        <label className="block mb-1">Alternative Phone Number</label>
-        <input
-          name="altPhone"
-          value={formData.altPhone || ""}
-          onChange={handleChange}
-          placeholder="Enter Alternative Phone Number"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* First Preference Service */}
-      <div>
-        <label className="block mb-1">First Preference Service</label>
-        <select
-          name="prefService"
-          value={formData.prefService || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Service</option>
-        </select>
-      </div>
-
-      {/* Stage */}
-      <div>
-        <label className="block mb-1">Stage *</label>
-        <input
-          name="stage"
-          value={formData.stage || ""}
-          onChange={handleChange}
-          placeholder="Stage ID"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Responsible Type */}
-      <div>
-        <label className="block mb-1">Responsible Type *</label>
-        <select
-          name="respType"
-          value={formData.respType || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>AZ Shakil | CEO, Founder</option>
-        </select>
-      </div>
-
-      {/* Referral Type */}
-      <div>
-        <label className="block mb-1">Referral Type</label>
-        <select
-          name="refType"
-          value={formData.refType || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Referral Type</option>
-        </select>
-      </div>
-
-      {/* Referred By */}
-      <div>
-        <label className="block mb-1">Referred By</label>
-        <input
-          name="referredBy"
-          value={formData.referredBy || ""}
-          onChange={handleChange}
-          placeholder="Enter EduxGateway ID"
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Next Action */}
-      <div>
-        <label className="block mb-1">Next Action</label>
-        <select
-          name="nextAction"
-          value={formData.nextAction || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Next Action</option>
-        </select>
-      </div>
-
-      {/* Next Action Date */}
-      <div>
-        <label className="block mb-1">Next Action Date</label>
-        <input
-          type="date"
-          name="nextActionDate"
-          value={formData.nextActionDate || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Agent Promotion */}
-      <div>
-        <label className="block mb-1">Agent Promotion</label>
-        <select
-          name="agentPromo"
-          value={formData.agentPromo || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Select Agent Promotion</option>
-        </select>
-      </div>
-
-      {/* Active */}
-      <div>
-        <label className="block mb-1">Is Active?</label>
-        <select
-          name="active"
-          value={formData.active || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        >
-          <option>Yes</option>
-          <option>No</option>
-        </select>
-      </div>
-
-      {/* Description */}
-      <div className="col-span-2">
-        <label className="block mb-1">Description</label>
-        <textarea
-          name="description"
-          value={formData.description || ""}
-          onChange={handleChange}
-          className="w-full p-2 rounded border"
-        />
-      </div>
-
-      {/* Buttons */}
-      <div className="col-span-2 flex justify-end gap-4 mt-4">
-        <button className="px-4 py-2 bg-gray-400 text-white rounded">
           <Link to="/dashboard/sales/clients">Cancel</Link>
-        </button>
+        </motion.button>
+      </div>
 
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+      {error && <div className="col-span-2 text-red-600 font-semibold">{error}</div>}
+
+      {/* ------- All Fields -------- */}
+      {Object.keys(initialState).map((key) => {
+        // Render select fields
+        if (["type","nationality","currentLocation","civilStatus","stage","respType","refType","active"].includes(key)) {
+          return (
+            <div key={key}>
+              <label className="block mb-1 font-bold">{key.replace(/([A-Z])/g, ' $1')}</label>
+              <select name={key} value={formData[key]} onChange={handleChange} className={selectBase}>
+                <option value="">Select {key.replace(/([A-Z])/g, ' $1')}</option>
+                {/* Specific options */}
+                {key === "type" && <><option>Individual</option><option>Company</option></>}
+                {key === "nationality" && <><option>Bangladesh</option><option>India</option><option>Pakistan</option></>}
+                {key === "currentLocation" && <><option>Dhaka</option><option>Chittagong</option><option>Rajshahi</option></>}
+                {key === "civilStatus" && <><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option></>}
+                {key === "stage" && <><option>New</option><option>In Progress</option><option>Closed</option></>}
+                {key === "respType" && <><option>AZ Shakil | CEO, Founder</option></>}
+                {key === "refType" && <><option>Internal</option><option>External</option></>}
+                {key === "active" && <><option>Yes</option><option>No</option></>}
+              </select>
+            </div>
+          );
+        }
+
+        // Render textarea for description
+        if (key === "description") {
+          return (
+            <div className="col-span-2" key={key}>
+              <label className="block mb-1 font-bold">Description</label>
+              <textarea
+                name={key}
+                value={formData[key]}
+                onChange={handleChange}
+                className={inputBase}
+                rows={3}
+              />
+            </div>
+          );
+        }
+
+        // Render date input
+        if (key === "dob" || key === "nextActionDate") {
+          return (
+            <div key={key}>
+              <label className="block mb-1 font-bold">{key.replace(/([A-Z])/g, ' $1')}</label>
+              <input type="date" name={key} value={formData[key]} onChange={handleChange} className={inputBase} />
+            </div>
+          );
+        }
+
+        // Default text input
+        return (
+          <div key={key}>
+            <label className="block mb-1 font-bold">{key.replace(/([A-Z])/g, ' $1')}</label>
+            <input name={key} value={formData[key]} onChange={handleChange} className={inputBase} />
+          </div>
+        );
+      })}
+
+      {/* ---------- Buttons ---------- */}
+      <div className="col-span-2 flex justify-end gap-4 mt-4">
+        <motion.button
+          whileTap={{ scale: 0.94 }}
           onClick={handleClick}
           disabled={loading}
+          className="px-6 py-3 font-extrabold text-white bg-indigo-600 rounded-xl border-[3px] border-indigo-900 shadow-[6px_6px_0_0_#312e81] transition-all hover:-translate-y-1"
         >
           {loading ? "Adding..." : "Add Client"}
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }

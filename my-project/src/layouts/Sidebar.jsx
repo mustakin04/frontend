@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 bg-white border-r h-full p-4">
-      <h1 className="text-2xl font-bold mb-6">ALTAS CRM</h1>
+      <h1 className="text-2xl font-bold mb-6">Apprent CRM</h1>
 
       <nav className="flex flex-col gap-3">
 

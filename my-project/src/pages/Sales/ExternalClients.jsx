@@ -20,7 +20,8 @@ const ExternalClients = () => {
           }
         );
 
-        setExternalClients(res.data);
+        setExternalClients(res.data.clients);
+        console.log(res.data,"ex")
       } catch (err) {
         console.error("Failed to fetch external clients:", err);
       }

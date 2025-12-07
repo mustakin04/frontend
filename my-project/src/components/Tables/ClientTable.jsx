@@ -4,16 +4,12 @@ import clsx from "clsx";
 
 const ClientTable = ({ clients }) => {
   return (
-    <div className="bg-white shadow rounded-xl">
-      {/* Horizontal scroll wrapper */}
+    <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-gray-200 table-fixed">
+          <thead className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
             <tr>
               {[
-                "Account",
-                "Entity",
-                "Type",
                 "First Name",
                 "Last Name",
                 "Email",
@@ -37,11 +33,13 @@ const ClientTable = ({ clients }) => {
                 "Agent Promo",
                 "Active",
                 "Description",
+                "Account",
+                "Entity",
                 "Actions",
               ].map((header) => (
                 <th
                   key={header}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider"
                 >
                   {header}
                 </th>
@@ -53,21 +51,48 @@ const ClientTable = ({ clients }) => {
             {clients.map((client, idx) => (
               <tr
                 key={client._id || idx}
-                className={clsx(idx % 2 === 0 ? "bg-white" : "bg-gray-50")}
+                className={clsx(
+                  idx % 2 === 0 ? "bg-white" : "bg-gray-50",
+                  "hover:bg-indigo-50 transition-colors duration-200"
+                )}
               >
-                <td className="px-6 py-4 whitespace-nowrap">{client.account}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.entity}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.type}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.firstName}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.lastName}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.phone}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.nationality}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.currentLocation}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.altName}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.dob}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.civilStatus}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.address}</td>
+                {/* FIRST NAME */}
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]">
+                  {client.firstName}
+                </td>
+
+                {/* LAST NAME */}
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]">
+                  {client.lastName}
+                </td>
+
+                {/* OTHER COLUMNS */}
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {client.email}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {client.phone}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {client.nationality}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {client.currentLocation}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {client.altName}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {client.dob}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {client.civilStatus}
+                </td>
+
+                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
+                  {client.address}
+                </td>
+
                 <td className="px-6 py-4 whitespace-nowrap">{client.admin1}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{client.admin2}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{client.altPhone}</td>
@@ -79,23 +104,34 @@ const ClientTable = ({ clients }) => {
                 <td className="px-6 py-4 whitespace-nowrap">{client.nextAction}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{client.nextActionDate}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{client.agentPromo}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
+
+                <td className="px-6 py-4">
                   <span
                     className={clsx(
-                      "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
-                      client.active === "Yes" && "bg-green-100 text-green-800",
-                      client.active === "No" && "bg-red-100 text-red-800"
+                      "px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full",
+                      client.active === "Yes"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
                     )}
                   >
                     {client.active}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.description}</td>
+
+                {/* DESCRIPTION */}
+                <td className="px-6 py-4 whitespace-normal break-words max-w-[200px]">
+                  {client.description}
+                </td>
+
+                {/* ACCOUNT */}
+                <td className="px-6 py-4 whitespace-nowrap">{client.account}</td>
+
+                {/* ENTITY */}
+                <td className="px-6 py-4 whitespace-nowrap">{client.entity}</td>
+
+                {/* ACTIONS */}
                 <td className="px-6 py-4 whitespace-nowrap flex gap-2">
-                  <button
-                    className="text-blue-500 hover:text-blue-700"
-                    onClick={client.onView}
-                  >
+                  <button className="text-blue-500 hover:text-blue-700" onClick={client.onView}>
                     <FiEye />
                   </button>
                   <button className="text-green-500 hover:text-green-700">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DashboardCards from "../../components/Dashboard/DashboardCards";
+import DashboardCards from "../../components/Dashboard/LeadCards";
 import RecentLeads from "../../components/Dashboard/RecentLeads";
 import RecentActivities from "../../components/Dashboard/RecentActivities";
 
