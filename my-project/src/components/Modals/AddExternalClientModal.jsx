@@ -30,7 +30,7 @@ const AddExternalClientModal = ({ onClose }) => {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "http://localhost:3000/api/v1/externalClient/addExternalClient",
+        "https://crm-backend-ig92.onrender.com/api/v1/externalClient/addExternalClient",
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},

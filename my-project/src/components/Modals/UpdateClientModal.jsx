@@ -1,13 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function AddClientModal() {
+export default function UpdateClientModal() {
+    const {id}=useParams()
+    console.log(id,"ami")
   const initialState = {
     account: "Atlas Study", // STATIC VALUE
     entity: "",
     firstName: "",
+    middleName: "",
     lastName: "",
     dob: "",
     passport: "",
@@ -34,121 +37,19 @@ export default function AddClientModal() {
     active: "",
     description: "",
   };
-    const [formData, setFormData] = useState(initialState);
+
+  const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [suggestedLeads, setSuggestedLeads] = useState([]);
-const [showSuggestions, setShowSuggestions] = useState(false);
-// Client duplicate
-  const [clientExists, setClientExists] = useState(false);
-  const [existingClient, setExistingClient] = useState(null);
-  const autofillFromLead = (lead) => {
-  setFormData((prev) => ({
-    ...prev,
-
-    // Basic info
-    firstName: lead.firstName || "",
-    lastName: lead.lastName || "",
-    email: lead.email || "",
-    phone: lead.phone || "",
-
-    // Personal
-    dob: lead.dob || "",
-    passport: lead.passport || "",
-    nationality: lead.nationality || "",
-    civilStatus: lead.civilStatus || "",
-
-    // Address
-    currentLocation: lead.currentLocation || "",
-    address: lead.address || "",
-    policeStation: lead.policeStation || "",
-    district: lead.district || "",
-
-    // Emergency
-    emergencyContact: lead.emergencyContact || "",
-    emergencyPhone: lead.emergencyPhone || "",
-
-    // Service preference
-    prefService: lead.prefService || "",
-    firstServicePref: lead.firstServicePref || "",
-    secondServicePref: lead.secondServicePref || "",
-
-    // Campaign / assignment
-    campaignCode: lead.campaignCode || "",
-    responsibleType: lead.responsibleType || "",
-    responsible: lead.responsible || "",
-
-    // Stage auto logic
-    stage: "In Progress",
-  }));
-
-  setShowSuggestions(false);
-};
-
-
-
-
-
 
   const inputBase =
     "w-full p-3 rounded-xl border-[3px] border-slate-800 bg-white shadow-[6px_6px_0_0_#1e293b] focus:outline-none focus:ring-4 focus:ring-indigo-300";
 
   const selectBase = inputBase;
 
-  const handleChange = async (e) => {
-  const { name, value } = e.target;
-console.log("Searching lead:", name, value);
-
-  setFormData({ ...formData, [name]: value });
-   // ---------- CLIENT DUPLICATE CHECK ----------
-    if (name === "email" && value.length >= 5) {
-      try {
-         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `http://localhost:3000/api/v1/client/check?email=${value}`,
-          {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }
-        );
-
-        if (res.data.exists) {
-          setClientExists(true);
-          setExistingClient(res.data.client);
-          setShowSuggestions(false);
-          return;
-        } else {
-          setClientExists(false);
-          setExistingClient(null);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-  if ((name === "email" || name === "phone") && value.length >= 3) {
-    try {
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/lead/similar?${name}=${value}`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        }
-      );
-console.log("Leads found:", res.data);
-
-      if (res.data.length > 0) {
-        setSuggestedLeads(res.data);
-        setShowSuggestions(true);
-      } else {
-        setShowSuggestions(false);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-};
-
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   
   const handleClick = async (e) => {
     e.preventDefault();
@@ -158,8 +59,8 @@ console.log("Leads found:", res.data);
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.post(
-        "http://localhost:3000/api/v1/client/createClient",
+      const res = await axios.put(
+        `http://localhost:3000/api/v1/client/updateClient/${id}`,
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -184,7 +85,7 @@ console.log("Leads found:", res.data);
       className="p-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 border-[3px] border-slate-800 rounded-2xl bg-[#fefaf5]"
     >
       <div className="col-span-2 flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-extrabold text-slate-900">New Client</h2>
+        <h2 className="text-3xl font-extrabold text-slate-900">Update Client</h2>
         <motion.button
           whileTap={{ scale: 0.92 }}
           className="px-6 py-2 text-slate-900 bg-white border-[3px] border-slate-800 rounded-xl"
@@ -322,48 +223,15 @@ console.log("Leads found:", res.data);
       </div>
 
       {/* CONTACT */}
-     <div className="relative mb-4">
-        <label className="font-bold">Email</label>
+      <div>
+        <label className="block mb-1 font-bold">Email</label>
         <input
           name="email"
           value={formData.email}
           onChange={handleChange}
           className={inputBase}
         />
-
-        {/* CLIENT EXISTS WARNING */}
-        {clientExists && (
-          <div className="mt-2 p-3 bg-red-100 border border-red-400 rounded-xl text-sm">
-            ❌ <b>Client already exists</b>
-            <div>
-              {existingClient?.firstName} {existingClient?.lastName} —{" "}
-              {existingClient?.email}
-            </div>
-          </div>
-        )}
-
-        {/* LEAD SUGGESTIONS */}
-        {showSuggestions && !clientExists && (
-          <div className="absolute w-full bg-white border rounded-xl shadow-lg mt-1 z-50">
-            {suggestedLeads.map((lead) => (
-              <div
-                key={lead._id}
-                onClick={() => autofillFromLead(lead)}
-                className="p-3 hover:bg-indigo-50 cursor-pointer"
-              >
-                <p className="font-bold">
-                  {lead.firstName} {lead.lastName}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {lead.email} • {lead.phone}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
-
-
       <div>
         <label className="block mb-1 font-bold">Phone Number</label>
         <input
@@ -615,7 +483,7 @@ console.log("Leads found:", res.data);
           className={inputBase}
         ></textarea>
       </div>
-
+  
       {/* BUTTON */}
       <div className="col-span-2 flex justify-end">
         <motion.button
@@ -627,12 +495,7 @@ console.log("Leads found:", res.data);
           {loading ? "Adding..." : "Add Client"}
         </motion.button>
       </div>
-      {showSuggestions && (
-  <p className="text-sm text-orange-600 mt-1">
-    Similar lead found — click to autofill
-  </p>
-)}
-
+      
     </motion.div>
   );
 }

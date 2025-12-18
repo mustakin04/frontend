@@ -10,7 +10,7 @@ const Navbar = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:3000/api/v1/authentication/me",
+          "https://crm-backend-ig92.onrender.com/api/v1/authentication/me",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

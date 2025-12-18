@@ -40,7 +40,7 @@ const LeadCards = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:3000/api/v1/lead/dasboradData",
+          "https://crm-backend-ig92.onrender.com/api/v1/lead/dasboradData",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,

@@ -1,47 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
 import clsx from "clsx";
+import ViewTransactionModal from "../Modals/ViewTransactionModal";
+import { Link } from "react-router";
+import DeleteTransaction from "../Modals/DeleteTransaction";
 
-const TransactionsTable = ({ transactions }) => {
-  console.log(transactions,'transaction')
+const TransactionsTable = ({ transactions = [] }) => {
+  const [showTransaction, setShowTransaction] = useState(false);
+  const [transactionData, setTransactionData] = useState(null);
+  const [showTransactionDeleted,setShowTransactionDeleted]=useState(false)
+  const [deleteTransactionId,setDeleteTransactionId]=useState(null)
+  const [confirm,setConfirm]=useState("")
+  const handleTransaction = (txn) => {
+    setShowTransaction(true);
+    setTransactionData(txn);
+  };
+  const handleClose = () => {
+    setShowTransaction(false);
+     setTransactionData(null)
+  };
+  const handleTransactionDeleted=(id)=>{
+         setShowTransactionDeleted(true)
+         setDeleteTransactionId(id)
+  }
+  const handleCancel=()=>{
+    setShowTransactionDeleted(false)
+    setDeleteTransactionId(null)
+  }
+  console.log(transactionData, "id");
   return (
     <div className="overflow-x-auto bg-white shadow rounded-xl">
-      <table className="min-w-full divide-y divide-gray-200">
+      <table className="min-w-full divide-y divide-gray-200 text-sm">
         <thead className="bg-gray-50">
           <tr>
             {[
+              "#",
               "Transaction ID",
-              "Client Name",
-              "Service",
+              "Client",
+              "Title",
+              "Type",
               "Total Fee",
               "Paid",
               "Due",
-              "Payment Date",
-              "Payment Method",
-
-              // ✅ Newly Added Columns
               "Account",
               "Entity",
-              "Branch",
               "Ownership",
-              "Title",
-              "Type",
-              "Subtype",
               "Applicant Type",
               "Destination",
               "University",
               "Course",
               "Responsible Type",
               "Responsible",
-              "Has Secondary Responsible",
+              "Secondary Responsible",
               "Next Action",
               "Next Action Date",
-
+              "Stage",
+              "Status",
               "Actions",
             ].map((header) => (
               <th
                 key={header}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-4 py-3 text-left font-semibold text-gray-600 uppercase whitespace-nowrap"
               >
                 {header}
               </th>
@@ -52,47 +71,66 @@ const TransactionsTable = ({ transactions }) => {
         <tbody className="divide-y divide-gray-200">
           {transactions.map((txn, idx) => (
             <tr
-              key={txn.id || idx}
+              key={txn._id || idx}
               className={clsx(idx % 2 === 0 ? "bg-white" : "bg-gray-50")}
             >
-              <td className="px-6 py-4 whitespace-nowrap">{txn.transactionId}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.clientName}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.service}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.totalFee}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.paid}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.due}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.paymentDate}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.paymentMethod}</td>
+              {/* 🔢 INDEX */}
+              <td className="px-4 py-4 font-medium">{idx + 1}</td>
 
-              {/* ✅ Newly Added Fields */}
-              <td className="px-6 py-4 whitespace-nowrap">{txn.account}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.entity}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.branch}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.ownership}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.title}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.visaType}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.subtype}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.applicantType}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.destination}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.university}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.course}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.responsibleType}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.responsible}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-4 py-4 truncate">{txn._id}</td>
+              <td className="px-4 py-4 truncate">{txn.client}</td>
+              <td className="px-4 py-4 truncate">{txn.title}</td>
+              <td className="px-4 py-4 truncate">{txn.type}</td>
+
+              {/* 💰 PAYMENT */}
+              <td className="px-4 py-2 font-medium">{txn.totalFee}</td>
+              <td className="px-4 py-2 text-green-600">{txn.paid}</td>
+              <td className="px-4 py-2 text-red-600">{txn.due}</td>
+
+              {/* 📌 BASIC INFO */}
+              <td className="px-4 py-2 truncate">{txn.account}</td>
+              <td className="px-4 py-2 truncate">{txn.entity}</td>
+              <td className="px-4 py-2 truncate">{txn.ownership}</td>
+
+              {/* 🎓 STUDY INFO */}
+              <td className="px-4 py-2 truncate">{txn.applicantType}</td>
+              <td className="px-4 py-2 truncate">{txn.destination}</td>
+              <td className="px-4 py-2 truncate">{txn.university}</td>
+              <td className="px-4 py-2 truncate">{txn.courses}</td>
+
+              {/* 👤 RESPONSIBILITY */}
+              <td className="px-4 py-2 truncate">{txn.responsibleType}</td>
+              <td className="px-4 py-2 truncate">{txn.responsible}</td>
+              <td className="px-4 py-2 truncate">
                 {txn.hasSecondaryResponsible ? "Yes" : "No"}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.nextAction}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{txn.nextActionDate}</td>
 
-              {/* Actions */}
-              <td className="px-6 py-4 whitespace-nowrap flex gap-2">
-                <button className="text-blue-500 hover:text-blue-700">
+              {/* ⏭ NEXT ACTION */}
+              <td className="px-4 py-2 truncate">{txn.nextAction}</td>
+              <td className="px-4 py-2 truncate">{txn.nextActionDate}</td>
+
+              {/* ⚙ STATUS */}
+              <td className="px-4 py-2 truncate">{txn.stage}</td>
+              <td className="px-4 py-2 truncate">
+                {txn.isActive ? "Active" : "Inactive"}
+              </td>
+
+              {/* 🔧 ACTIONS */}
+              <td className="px-4 py-2 flex gap-2">
+                <button
+                  className="text-blue-600 hover:text-blue-800"
+                  onClick={() => handleTransaction(txn)}
+                >
                   <FiEye />
                 </button>
-                <button className="text-green-500 hover:text-green-700">
-                  <FiEdit2 />
+                <button className="text-green-600 hover:text-green-800">
+                  <Link to={`/dashboard/services/transaction/updateTransaction/${txn._id}`}>
+                    {" "}
+                    <FiEdit2 />
+                  </Link>
                 </button>
-                <button className="text-red-500 hover:text-red-700">
+                <button className="text-red-600 hover:text-red-800"
+                onClick={()=>handleTransactionDeleted(txn._id)}>
                   <FiTrash2 />
                 </button>
               </td>
@@ -100,6 +138,30 @@ const TransactionsTable = ({ transactions }) => {
           ))}
         </tbody>
       </table>
+
+      {transactions.length === 0 && (
+        <div className="text-center py-6 text-gray-500">
+          No transactions found
+        </div>
+      )}
+      {showTransaction && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-xl max-w-3xl w-full shadow-lg">
+            <ViewTransactionModal
+              transaction={transactionData}
+              onClose={handleClose}
+            ></ViewTransactionModal>
+          </div>
+        </div>
+      )}
+      {
+        showTransactionDeleted&&(<DeleteTransaction 
+          deleteID={deleteTransactionId}
+          onCancel={handleCancel}
+          confirmText="delete"
+          inputValue={confirm}
+          setInputValue={setConfirm}/>)
+      }
     </div>
   );
 };

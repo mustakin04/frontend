@@ -40,7 +40,7 @@ const ClientCards = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:3000/api/v1/client/getDashboardData",
+          "https://crm-backend-ig92.onrender.com/api/v1/client/getDashboardData",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,

@@ -59,7 +59,7 @@ export default function NewApplicationModal() {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "http://localhost:3000/api/v1/application/createApplication",
+        "https://crm-backend-ig92.onrender.com/api/v1/application/createApplication",
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},

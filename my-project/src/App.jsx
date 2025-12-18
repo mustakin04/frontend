@@ -21,6 +21,8 @@ import AddExternalClientModal from "./components/Modals/AddExternalClientModal";
 import AddTransactionModal from "./components/Modals/AddTransactionModal";
 import ApplicationModal from './components/Modals/ApplicationModal';
 import DashboardPage from "./pages/Dashboard/DashboardPage";
+import UpdateClientModal from './components/Modals/UpdateClientModal';
+import EditTransactionModal from "./components/Modals/EditTransactionModal";
 
 function App() {
   const router = createBrowserRouter([
@@ -46,11 +48,13 @@ function App() {
         { path: "/dashboard/sales/leads", element: <Leads /> },
         { path: "/dashboard/sales/clients", element: <Clients /> },
         { path: "/dashboard/sales/clients/addClient", element: <AddClientModal /> },
+        {path:"sales/clients/updateClient/:id",element:<UpdateClientModal></UpdateClientModal>},
         {path:"/dashboard/sales/external" ,element:<ExternalClients/>},
         {path:"/dashboard/sales/external/addExternalClient" ,element:<AddExternalClientModal/>},
 
         // Services
         { path: "/dashboard/services/transactions", element: <Transactions /> },
+        {path:"/dashboard/services/transaction/updateTransaction/:id",element :<EditTransactionModal></EditTransactionModal>},
         { path: "/dashboard/services/transactions/addtransaction", element: <AddTransactionModal /> },
         { path: "/dashboard/services/applications", element: <Applications /> },
         { path:"/dashboard/services/applications/addapplication",element:<ApplicationModal/>},

@@ -1,8 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
 import clsx from "clsx";
+import { Link } from "react-router";
+import axios from "axios";
+import ViewClientModal from "../Modals/ViewClientModal";
+import DeleteConfirmationModal from "../Modals/DeleteConfirmationModal";
 
 const ClientTable = ({ clients }) => {
+  const [show, setShow] = useState(false);
+  const [selectedID, setSelectedID] = useState(null);
+  const [getData, setGetData] = useState(null);
+  const [deleteShow, setDeleteShow] = useState(false);
+  const [deletedID, setDeletedID] = useState(null);
+  const [confirmTextValue, setConfirmTextValue] = useState("");
+
+  const handleClick = (id) => {
+    setSelectedID(id);
+    setShow(true);
+  };
+
+  const closeModal = () => {
+    setShow(false);
+    setSelectedID(null);
+    setGetData(null);
+  };
+
+  useEffect(() => {
+    if (!selectedID) return;
+
+    const fetchSingleClient = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          `http://localhost:3000/api/v1/client/getSingleClient/${selectedID}`,
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            withCredentials: true,
+          }
+        );
+
+        setGetData(res.data?.data || res.data);
+      } catch (err) {
+        console.log("Error loading single client:", err);
+      }
+    };
+
+    fetchSingleClient();
+  }, [selectedID]);
+
+  const handleDeleted = (id) => {
+    setDeletedID(id);
+    setDeleteShow(true);
+    setConfirmTextValue(""); // input clear
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.delete(
+        `http://localhost:3000/api/v1/client/deleted/${deletedID}`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+
+      // console.log("Delete success:", res.data);
+      setDeleteShow(false);
+    } catch (err) {
+      console.log("Delete error:", err);
+    }
+  };
+
   return (
     <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
       <div className="overflow-x-auto">
@@ -10,22 +80,26 @@ const ClientTable = ({ clients }) => {
           <thead className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
             <tr>
               {[
-                "First Name",
+                "#", // Row number
+                "Full Name",
                 "Last Name",
                 "Email",
                 "Phone",
+                "Emergency Contact",
+                "Emergency Phone",
                 "Nationality",
-                "Current Location",
-                "Alternative Name",
+                "Passport",
                 "DOB",
                 "Civil Status",
+                "Current Location",
                 "Address",
-                "Admin1",
-                "Admin2",
-                "Alt Phone",
+                "Police Station",
+                "District",
+                "Responsible Type",
                 "Pref Service",
                 "Stage",
-                "Resp Type",
+                "Type",
+                "Responsible",
                 "Ref Type",
                 "Referred By",
                 "Next Action",
@@ -56,55 +130,31 @@ const ClientTable = ({ clients }) => {
                   "hover:bg-indigo-50 transition-colors duration-200"
                 )}
               >
-                {/* FIRST NAME */}
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]">
-                  {client.firstName}
-                </td>
-
-                {/* LAST NAME */}
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]">
-                  {client.lastName}
-                </td>
-
-                {/* OTHER COLUMNS */}
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {client.email}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {client.phone}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {client.nationality}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {client.currentLocation}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {client.altName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {client.dob}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                  {client.civilStatus}
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
-                  {client.address}
-                </td>
-
-                <td className="px-6 py-4 whitespace-nowrap">{client.admin1}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.admin2}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.altPhone}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.prefService}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.stage}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.respType}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.refType}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.referredBy}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.nextAction}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.nextActionDate}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{client.agentPromo}</td>
-
+                <td className="px-6 py-4">{idx + 1}</td> {/* Row number */}
+                <td className="px-6 py-4 truncate">{client.firstName}</td>
+                <td className="px-6 py-4 truncate">{client.lastName}</td>
+                <td className="px-6 py-4 truncate">{client.email}</td>
+                <td className="px-6 py-4 truncate">{client.phone}</td>
+                <td className="px-6 py-4 truncate">{client.emergencyContact}</td>
+                <td className="px-6 py-4 truncate">{client.emergencyPhone}</td>
+                <td className="px-6 py-4 truncate">{client.nationality}</td>
+                <td className="px-6 py-4 truncate">{client.passport}</td>
+                <td className="px-6 py-4 truncate">{client.dob}</td>
+                <td className="px-6 py-4 truncate">{client.civilStatus}</td>
+                <td className="px-6 py-4 truncate">{client.currentLocation}</td>
+                <td className="px-6 py-4 truncate">{client.address}</td>
+                <td className="px-6 py-4 truncate">{client.policeStation}</td>
+                <td className="px-6 py-4 truncate">{client.district}</td>
+                <td className="px-6 py-4 truncate">{client.responsibleType}</td>
+                <td className="px-6 py-4 truncate">{client.prefService}</td>
+                <td className="px-6 py-4 truncate">{client.stage}</td>
+                <td className="px-6 py-4 truncate">{client.type}</td>
+                <td className="px-6 py-4 truncate">{client.responsible}</td>
+                <td className="px-6 py-4 truncate">{client.refType}</td>
+                <td className="px-6 py-4 truncate">{client.referredBy}</td>
+                <td className="px-6 py-4 truncate">{client.nextAction}</td>
+                <td className="px-6 py-4 truncate">{client.nextActionDate}</td>
+                <td className="px-6 py-4 truncate">{client.agentPromo}</td>
                 <td className="px-6 py-4">
                   <span
                     className={clsx(
@@ -117,28 +167,26 @@ const ClientTable = ({ clients }) => {
                     {client.active}
                   </span>
                 </td>
-
-                {/* DESCRIPTION */}
-                <td className="px-6 py-4 whitespace-normal break-words max-w-[200px]">
-                  {client.description}
-                </td>
-
-                {/* ACCOUNT */}
-                <td className="px-6 py-4 whitespace-nowrap">{client.account}</td>
-
-                {/* ENTITY */}
-                <td className="px-6 py-4 whitespace-nowrap">{client.entity}</td>
-
-                {/* ACTIONS */}
-                <td className="px-6 py-4 whitespace-nowrap flex gap-2">
-                  <button className="text-blue-500 hover:text-blue-700" onClick={client.onView}>
+                <td className="px-6 py-4 max-w-[220px] break-words">{client.description}</td>
+                <td className="px-6 py-4">{client.account}</td>
+                <td className="px-6 py-4">{client.entity}</td>
+                <td className="px-6 py-4 flex gap-3">
+                  <button
+                    className="text-blue-500 hover:text-blue-700"
+                    onClick={() => handleClick(client._id)}
+                  >
                     <FiEye />
                   </button>
-                  <button className="text-green-500 hover:text-green-700">
+
+                  <Link
+                    to={`/dashboard/sales/clients/updateClient/${client._id}`}
+                    className="text-green-500 hover:text-green-700"
+                  >
                     <FiEdit2 />
-                  </button>
+                  </Link>
+
                   <button className="text-red-500 hover:text-red-700">
-                    <FiTrash2 />
+                    <FiTrash2 onClick={() => handleDeleted(client._id)} />
                   </button>
                 </td>
               </tr>
@@ -146,6 +194,27 @@ const ClientTable = ({ clients }) => {
           </tbody>
         </table>
       </div>
+
+      {/* MODAL */}
+      {show && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-xl max-w-3xl w-full shadow-lg">
+            <ViewClientModal client={getData} onClose={closeModal} />
+          </div>
+        </div>
+      )}
+
+      {deleteShow && (
+        <DeleteConfirmationModal
+          title="Only admins can delete this client"
+          message="Type"
+          confirmText="deleted"
+          inputValue={confirmTextValue}
+          setInputValue={setConfirmTextValue}
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteShow(false)}
+        />
+      )}
     </div>
   );
 };

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 
-const AddTransactionModal = () => {
+const EditTransactionModal = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
     account: "Atlas",
     entity: "",
-
     ownership: "Own",
 
     client: "",
@@ -28,7 +32,6 @@ const AddTransactionModal = () => {
 
     responsibleType: "User",
     responsible: "Atlas Account",
-
     hasSecondaryResponsible: false,
 
     nextAction: "",
@@ -41,75 +44,9 @@ const AddTransactionModal = () => {
     description: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  console.log(clients, "dlaj;lj");
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    let updatedData = {
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    };
+ 
 
-    // Recalculate due if totalFee or paid changes
-    if (name === "totalFee" || name === "paid") {
-      const total = Number(updatedData.totalFee || 0);
-      const paid = Number(updatedData.paid || 0);
-      updatedData.due = Math.max(total - paid, 0);
-    }
-
-    setFormData(updatedData);
-  };
-
-  // Submit form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    console.log("Submitting formData:", formData); // Debug
-
-    try {
-      const token = localStorage.getItem("token");
-
-      await axios.post(
-        "http://localhost:3000/api/v1/transaction/createTransaction",
-        formData,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-          withCredentials: true,
-        }
-      );
-
-      // Optional: Reset form after success
-      setFormData({
-        ...formData,
-        entity: "",
-        client: "",
-        title: "",
-        type: "",
-        subtype: "",
-        applicantType: "",
-        destination: "",
-        university: "",
-        courses: "",
-        totalFee: "",
-        paid: "",
-        due: "",
-        nextAction: "",
-        nextActionDate: "",
-        stage: "Open",
-        isReference: false,
-        description: "",
-      });
-    } catch (err) {
-      setError(err.response?.data?.message || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch clients
   useEffect(() => {
     const fetchClients = async () => {
       try {
@@ -122,13 +59,53 @@ const AddTransactionModal = () => {
           }
         );
         setClients(res.data);
-        // console.log(res.data,"client")
       } catch (err) {
-        console.error("Failed to fetch clients:", err);
+        console.error("Failed to fetch clients");
       }
     };
     fetchClients();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    let updatedData = {
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    };
+
+    if (name === "totalFee" || name === "paid") {
+      const total = Number(updatedData.totalFee || 0);
+      const paid = Number(updatedData.paid || 0);
+      updatedData.due = Math.max(total - paid, 0);
+    }
+
+    setFormData(updatedData);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `http://localhost:3000/api/v1/transaction/updateTransaction/${id}`,
+        formData,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        }
+      );
+      navigate("/dashboard/services/transactions");
+    } catch (err) {
+      setError(err.response?.data?.message || "Update failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const inputClass =
     "w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none";
   const labelClass = "block mb-1 font-bold text-sm";
@@ -141,7 +118,7 @@ const AddTransactionModal = () => {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-5 overflow-y-scroll"
       >
-        <h2 className="text-2xl font-bold col-span-2">New Transaction</h2>
+        <h2 className="text-2xl font-bold col-span-2">Edit Transaction</h2>
 
         {error && (
           <div className="col-span-2 bg-red-50 text-red-600 p-3 rounded-xl">
@@ -172,6 +149,7 @@ const AddTransactionModal = () => {
             <option value="China">China</option>
           </select>
         </div>
+
         <div>
           <label className={labelClass}>Ownership</label>
           <input className={inputClass} value={formData.ownership} disabled />
@@ -183,17 +161,12 @@ const AddTransactionModal = () => {
             className={inputClass}
             name="client"
             value={formData.client}
-            required
             onChange={handleChange}
           >
             <option value="">Select Client</option>
-
-            {clients.map((client) => (
-              <option
-                key={client._id}
-                value={`${client.firstName} | ${client.email}`}
-              >
-                {client.firstName} ({client.email})
+            {clients.map((c) => (
+              <option key={c._id} value={`${c.firstName} | ${c.email}`}>
+                {c.firstName} ({c.email})
               </option>
             ))}
           </select>
@@ -205,12 +178,14 @@ const AddTransactionModal = () => {
             className={inputClass}
             name="title"
             value={formData.title}
-            required
+            
             onChange={handleChange}
           />
         </div>
 
         {/* TYPE INFO */}
+        <div className={sectionTitle}>Type Info</div>
+
         <div>
           <label className={labelClass}>Type</label>
           <select
@@ -451,7 +426,7 @@ const AddTransactionModal = () => {
             disabled={loading}
             className="px-6 py-2 bg-blue-600 text-white rounded-xl"
           >
-            {loading ? "Saving..." : "Add"}
+            {loading ? "Updating..." : "Update"}
           </button>
         </div>
       </form>
@@ -459,4 +434,4 @@ const AddTransactionModal = () => {
   );
 };
 
-export default AddTransactionModal;
+export default EditTransactionModal;

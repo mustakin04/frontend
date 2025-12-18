@@ -20,7 +20,7 @@ const Clients = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:3000/api/v1/client/getClient",
+          "https://crm-backend-ig92.onrender.com/api/v1/client/getClient",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,

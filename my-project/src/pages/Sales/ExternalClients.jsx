@@ -13,7 +13,7 @@ const ExternalClients = () => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "http://localhost:3000/api/v1/externalClient/getExternalClients",
+          "https://crm-backend-ig92.onrender.com/api/v1/externalClient/getExternalClients",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
