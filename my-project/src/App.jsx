@@ -23,6 +23,7 @@ import ApplicationModal from './components/Modals/ApplicationModal';
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import UpdateClientModal from './components/Modals/UpdateClientModal';
 import EditTransactionModal from "./components/Modals/EditTransactionModal";
+import UpdateApplicationModal from "./components/Modals/UpdateApplicationModal";
 
 function App() {
   const router = createBrowserRouter([
@@ -57,7 +58,9 @@ function App() {
         {path:"/dashboard/services/transaction/updateTransaction/:id",element :<EditTransactionModal></EditTransactionModal>},
         { path: "/dashboard/services/transactions/addtransaction", element: <AddTransactionModal /> },
         { path: "/dashboard/services/applications", element: <Applications /> },
+        { path:"/dashboard/services/applications/updateAplicaiton/:id",element:<UpdateApplicationModal/>},
         { path:"/dashboard/services/applications/addapplication",element:<ApplicationModal/>},
+         
       ],
     },
   ]);

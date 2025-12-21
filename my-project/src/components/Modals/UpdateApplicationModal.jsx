@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { data, Link } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import axios from "axios";
 import { motion } from "framer-motion";
 
-export default function ApplicationModal() {
+export default function UpdateApplicationModal() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   /* ---------------- STATES ---------------- */
   const [clients, setClients] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     account: "Atlas",
@@ -30,7 +34,7 @@ export default function ApplicationModal() {
     isActive: true,
   });
 
-  /* ---------------- HANDLERS ---------------- */
+  /* ---------------- HANDLER ---------------- */
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -39,45 +43,64 @@ export default function ApplicationModal() {
     }));
   };
 
+  /* ---------------- FETCH APPLICATION ---------------- */
+  useEffect(() => {
+    const fetchApplication = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          `http://localhost:3000/api/v1/application/getapplication/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setFormData(res.data.data); // 🔥 preload all fields
+      } catch (err) {
+        console.error("Fetch application failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplication();
+  }, [id]);
+
+  /* ---------------- UPDATE SUBMIT ---------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting formData:", formData);
     try {
       const token = localStorage.getItem("token");
 
-      await axios.post(
-        "http://localhost:3000/api/v1/application/createApplication",
+      await axios.put(
+        `http://localhost:3000/api/v1/application/updateApplicaiton/${id}`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      alert("Application Created Successfully");
+      alert("Application Updated Successfully");
+      navigate("/dashboard/services/applications");
     } catch (error) {
-      console.error("Create application error:", error);
+      console.error("Update application error:", error);
     }
   };
 
   /* ---------------- FETCH TRANSACTIONS ---------------- */
   useEffect(() => {
     const fetchTransactions = async () => {
-      try {
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-        const res = await axios.get(
-          "http://localhost:3000/api/v1/transaction/getTransactions",
-          {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-            withCredentials: true,
-          }
-        );
+      const res = await axios.get(
+        "http://localhost:3000/api/v1/transaction/getTransactions",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-        setTransactions(res.data.data);
-        console.log(res.data.data, "transaciton");
-      } catch (err) {
-        console.error("Error fetching transactions:", err);
-      }
+      setTransactions(res.data.data);
     };
 
     fetchTransactions();
@@ -86,22 +109,16 @@ export default function ApplicationModal() {
   /* ---------------- FETCH CLIENTS ---------------- */
   useEffect(() => {
     const fetchClients = async () => {
-      try {
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-        const res = await axios.get(
-          "http://localhost:3000/api/v1/client/getClient",
-          {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-            withCredentials: true,
-          }
-        );
+      const res = await axios.get(
+        "http://localhost:3000/api/v1/client/getClient",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-        setClients(res.data || res.data);
-        console.log(res.data, "client");
-      } catch (err) {
-        console.error("Failed to fetch clients:", err);
-      }
+      setClients(res.data);
     };
 
     fetchClients();
@@ -118,6 +135,10 @@ export default function ApplicationModal() {
   const baseInput =
     "w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
 
+  if (loading) {
+    return <div className="text-center py-20">Loading application...</div>;
+  }
+
   /* ---------------- JSX ---------------- */
   return (
     <motion.form
@@ -129,35 +150,25 @@ export default function ApplicationModal() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-gray-800">
-          New Application
+          Update Application
         </h2>
         <span className="rounded-full bg-blue-50 px-4 py-1 text-sm font-medium text-blue-600">
           Stage: {formData.stage}
         </span>
       </div>
 
-      {/* ---------------- BASIC INFO ---------------- */}
+      {/* BASIC INFO */}
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-700">Basic Info</h3>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <Input label="Account *">
-            <select
-              name="account"
-              value={formData.account}
-              onChange={handleChange}
-              className={baseInput}
-            >
+          <Input label="Account">
+            <select name="account" value={formData.account} onChange={handleChange} className={baseInput}>
               <option value="Atlas">Atlas</option>
             </select>
           </Input>
 
-          <Input label="Entity *">
-            <select
-              name="entity"
-              value={formData.entity}
-              onChange={handleChange}
-              className={baseInput}
-            >
+          <Input label="Entity">
+            <select name="entity" value={formData.entity} onChange={handleChange} className={baseInput}>
               <option value="">Select Entity</option>
               <option value="Dhaka">Dhaka</option>
               <option value="China">China</option>
@@ -167,12 +178,7 @@ export default function ApplicationModal() {
           </Input>
 
           <Input label="Branch">
-            <select
-              name="branch"
-              value={formData.branch}
-              onChange={handleChange}
-              className={baseInput}
-            >
+            <select name="branch" value={formData.branch} onChange={handleChange} className={baseInput}>
               <option value="">Select Branch</option>
               <option value="Dhaka">Dhaka</option>
             </select>
@@ -180,63 +186,39 @@ export default function ApplicationModal() {
         </div>
       </section>
 
-      {/* ---------------- APPLICATION DETAILS ---------------- */}
+      {/* APPLICATION DETAILS */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-700">
-          Application Details
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-700">Application Details</h3>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-          {/* CLIENT */}
-          <Input label="Client *">
-            <select
-              name="client"
-              value={formData.client}
-              onChange={handleChange}
-              className={baseInput}
-            >
+          <Input label="Client">
+            <select name="client" value={formData.client} onChange={handleChange} className={baseInput}>
               <option value="">Select Client</option>
               {clients.map((c) => (
-                <option key={c._id} value={c.name}>
+                <option key={c._id} value={c.firstName}>
                   {c.firstName}
                 </option>
               ))}
             </select>
           </Input>
 
-          {/* TRANSACTION */}
           <Input label="Transaction">
-            <select
-              name="transaction"
-              value={formData.transaction}
-              onChange={handleChange}
-              className={baseInput}
-            >
+            <select name="transaction" value={formData.transaction} onChange={handleChange} className={baseInput}>
               <option value="">Select Transaction</option>
               {transactions.map((t) => (
-                <option key={t._id}  value={`${t.client} - ${t.createdAt?.slice(0,10)}`}>
+                <option key={t._id} value={`${t.client} - ${t.createdAt?.slice(0, 10)}`}>
                   {t.client} - {t.createdAt?.slice(0, 10)}
                 </option>
               ))}
             </select>
           </Input>
 
-          <Input label="Purpose of Application *">
-            <input
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className={baseInput}
-            />
+          <Input label="Purpose">
+            <input name="title" value={formData.title} onChange={handleChange} className={baseInput} />
           </Input>
 
-          <Input label="Stage *">
-            <select
-              name="stage"
-              value={formData.stage}
-              onChange={handleChange}
-              className={baseInput}
-            >
+          <Input label="Stage">
+            <select name="stage" value={formData.stage} onChange={handleChange} className={baseInput}>
               <option value="Open">Open</option>
               <option value="Submitted">Submitted</option>
               <option value="Rejected">Rejected</option>
@@ -246,17 +228,12 @@ export default function ApplicationModal() {
         </div>
       </section>
 
-      {/* ---------------- EDUCATION ---------------- */}
+      {/* EDUCATION */}
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-700">Education</h3>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-          <Input label="Type *">
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className={baseInput}
-            >
+          <Input label="Type">
+            <select name="type" value={formData.type} onChange={handleChange} className={baseInput}>
               <option value="College-List">College-List</option>
               <option value="College-Manual-Enter">College-Manual-Enter</option>
               <option value="Insurance">Insurance</option>
@@ -266,109 +243,67 @@ export default function ApplicationModal() {
             </select>
           </Input>
 
-          <Input label="University *">
-            <input
-              name="university"
-              value={formData.university}
-              onChange={handleChange}
-              className={baseInput}
-            />
+          <Input label="University">
+            <input name="university" value={formData.university} onChange={handleChange} className={baseInput} />
           </Input>
 
-          <Input label="Course *">
-            <input
-              name="course"
-              value={formData.course}
-              onChange={handleChange}
-              className={baseInput}
-            />
+          <Input label="Course">
+            <input name="course" value={formData.course} onChange={handleChange} className={baseInput} />
           </Input>
 
           <Input label="Intake Date">
-            <input
-              type="date"
-              name="intakeDate"
-              value={formData.intakeDate}
-              onChange={handleChange}
-              className={baseInput}
-            />
+            <input type="date" name="intakeDate" value={formData.intakeDate} onChange={handleChange} className={baseInput} />
           </Input>
         </div>
       </section>
 
-      {/* ---------------- META ---------------- */}
+      {/* META */}
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-700">Meta</h3>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
           <Input label="Priority">
-            <select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              className={baseInput}
-            >
+            <select name="priority" value={formData.priority} onChange={handleChange} className={baseInput}>
               <option value="Normal">Normal</option>
               <option value="High">High</option>
             </select>
           </Input>
 
           <Input label="Due Date">
-            <input
-              type="date"
-              name="dueDate"
-              value={formData.dueDate}
-              onChange={handleChange}
-              className={baseInput}
-            />
+            <input type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} className={baseInput} />
           </Input>
 
           <Input label="Responsible">
-            <select
-              name="responsible"
-              value={formData.responsible}
-              onChange={handleChange}
-              className={baseInput}
-            >
+            <select name="responsible" value={formData.responsible} onChange={handleChange} className={baseInput}>
               <option value="Nehal | CEO, Founder">Nehal | CEO, Founder</option>
             </select>
           </Input>
 
           <div className="flex items-center gap-3 pt-6">
-            <input
-              type="checkbox"
-              name="isActive"
-              checked={formData.isActive}
-              onChange={handleChange}
-            />
+            <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} />
             <span className="text-sm">Active</span>
           </div>
         </div>
       </section>
-       {/* ---------------- NOTES ---------------- */}
+
+      {/* NOTES */}
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-700">Notes / Description</h3>
+        <h3 className="text-lg font-semibold text-gray-700">Notes</h3>
         <textarea
           name="notes"
           value={formData.notes}
           onChange={handleChange}
-          placeholder="Write your description here..."
-          className={`${baseInput} h-24 resize-none`}
+          className={`${baseInput} h-24`}
         />
       </section>
-      {/* ---------------- ACTIONS ---------------- */}
+
+      {/* ACTIONS */}
       <div className="flex justify-end gap-4 border-t pt-6">
-        <Link
-          to="/dashboard/services/applications"
-          className="rounded-xl border px-6 py-2"
-        >
+        <Link to="/dashboard/services/applications" className="rounded-xl border px-6 py-2">
           Cancel
         </Link>
 
-        <button
-          type="submit"
-          className="rounded-xl bg-blue-600 px-6 py-2 text-white"
-        >
-          Check Eligibility
+        <button type="submit" className="rounded-xl bg-blue-600 px-6 py-2 text-white">
+          Update Application
         </button>
       </div>
     </motion.form>

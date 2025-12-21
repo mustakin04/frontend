@@ -5,9 +5,11 @@ import axios from "axios";
 
 const Applications = () => {
   const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true); // ✅ loading state
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // start loading
       try {
         const token = localStorage.getItem("token");
 
@@ -21,15 +23,16 @@ const Applications = () => {
 
         console.log(res.data, "API Response");
 
-        // same as code-1
         setApplications(res.data.data);
       } catch (err) {
         console.error("Error fetching applications:", err);
+      } finally {
+        setLoading(false); // ✅ stop loading
       }
     };
 
     fetchData();
-  }, []); // same as code-1
+  }, []);
 
   return (
     <div>
@@ -43,7 +46,7 @@ const Applications = () => {
         </button>
       </div>
 
-      <ApplicationsTable applications={applications} />
+      <ApplicationsTable applications={applications} isLoading={loading} />
     </div>
   );
 };

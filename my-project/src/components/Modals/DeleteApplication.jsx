@@ -2,13 +2,14 @@ import React from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-export default function DeleteTransaction({
-  leadName = "this Transaction",
+export default function DeleteApplication({
+  applicationName = "this application",
   confirmText = "delete",
   inputValue,
   setInputValue,
   deleteID,
   onCancel,
+  onSuccess, // optional callback
 }) {
   const onConfirm = async () => {
     if (!deleteID) return;
@@ -17,7 +18,7 @@ export default function DeleteTransaction({
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `http://localhost:3000/api/v1/transaction/deleteTransaction/${deleteID}`,
+        `http://localhost:3000/api/v1/application/deleteApplication/${deleteID}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
@@ -26,8 +27,10 @@ export default function DeleteTransaction({
 
       setInputValue("");
       onCancel();
+
+      if (onSuccess) onSuccess();
     } catch (error) {
-      console.error("Delete failed:", error);
+      console.error("Delete application failed:", error);
     }
   };
 
@@ -48,18 +51,16 @@ export default function DeleteTransaction({
       >
         {/* Header */}
         <h2 className="text-2xl font-extrabold text-slate-900 text-center">
-          Delete Transaction
+          Delete Application
         </h2>
 
         {/* Description */}
         <p className="text-slate-700 font-medium text-lg mt-4 text-center">
           Only admins can delete{" "}
-          <span className="font-bold">{leadName}</span>.
+          <span className="font-bold">{applicationName}</span>.
           <br />
           Type{" "}
-          <span className="text-red-600 font-extrabold">
-            {confirmText}
-          </span>{" "}
+          <span className="text-red-600 font-extrabold">{confirmText}</span>{" "}
           to confirm.
         </p>
 
