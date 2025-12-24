@@ -8,42 +8,32 @@ const AddTransactionModal = () => {
   const [formData, setFormData] = useState({
     account: "Atlas",
     entity: "",
-
     ownership: "Own",
-
     client: "",
     title: "",
-
     type: "",
     subtype: "",
-
     applicantType: "",
     destination: "",
     university: "",
     courses: "",
-
     totalFee: "",
     paid: "",
     due: "",
-
     responsibleType: "User",
     responsible: "Atlas Account",
-
     hasSecondaryResponsible: false,
-
     nextAction: "",
     nextActionDate: "",
-
     stage: "Open",
     isReference: false,
     isActive: true,
-
     description: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  console.log(clients, "dlaj;lj");
+
   // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -68,13 +58,13 @@ const AddTransactionModal = () => {
     setLoading(true);
     setError(null);
 
-    console.log("Submitting formData:", formData); // Debug
+    // console.log("Submitting formData:", formData);
 
     try {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "http://localhost:3000/api/v1/transaction/createTransaction",
+        "https://crm-backend-ig92.onrender.com/api/v1/transaction/createTransaction",
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -82,7 +72,6 @@ const AddTransactionModal = () => {
         }
       );
 
-      // Optional: Reset form after success
       setFormData({
         ...formData,
         entity: "",
@@ -115,36 +104,38 @@ const AddTransactionModal = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:3000/api/v1/client/getClient",
+          "https://crm-backend-ig92.onrender.com/api/v1/client/getClient",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
           }
         );
         setClients(res.data);
-        // console.log(res.data,"client")
       } catch (err) {
         console.error("Failed to fetch clients:", err);
       }
     };
     fetchClients();
   }, []);
+
   const inputClass =
-    "w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none";
-  const labelClass = "block mb-1 font-bold text-sm";
+    "w-full p-2 sm:p-2.5 md:p-3 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base";
+  const labelClass = "block mb-1 font-bold text-xs sm:text-sm";
   const sectionTitle =
-    "col-span-2 font-semibold text-lg text-gray-700 mt-6 border-b pb-1";
+    "col-span-1 md:col-span-2 font-semibold text-base sm:text-lg text-gray-700 mt-4 sm:mt-5 md:mt-6 border-b pb-1";
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center pt-10 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-start pt-4 sm:pt-8 md:pt-10 z-50 p-3 sm:p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-5 overflow-y-scroll"
+        className="bg-white p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-5 max-h-[90vh] overflow-y-auto"
       >
-        <h2 className="text-2xl font-bold col-span-2">New Transaction</h2>
+        <h2 className="text-xl sm:text-2xl font-bold col-span-1 md:col-span-2">
+          New Transaction
+        </h2>
 
         {error && (
-          <div className="col-span-2 bg-red-50 text-red-600 p-3 rounded-xl">
+          <div className="col-span-1 md:col-span-2 bg-red-50 text-red-600 p-2 sm:p-3 rounded-lg sm:rounded-xl text-sm sm:text-base">
             {error}
           </div>
         )}
@@ -172,6 +163,7 @@ const AddTransactionModal = () => {
             <option value="China">China</option>
           </select>
         </div>
+
         <div>
           <label className={labelClass}>Ownership</label>
           <input className={inputClass} value={formData.ownership} disabled />
@@ -187,7 +179,6 @@ const AddTransactionModal = () => {
             onChange={handleChange}
           >
             <option value="">Select Client</option>
-
             {clients.map((client) => (
               <option
                 key={client._id}
@@ -355,12 +346,13 @@ const AddTransactionModal = () => {
           <input className={inputClass} value={formData.responsible} disabled />
         </div>
 
-        <label className="flex items-center gap-2 col-span-2 font-bold text-sm">
+        <label className="flex items-center gap-2 col-span-1 md:col-span-2 font-bold text-xs sm:text-sm">
           <input
             type="checkbox"
             name="hasSecondaryResponsible"
             checked={formData.hasSecondaryResponsible}
             onChange={handleChange}
+            className="w-4 h-4"
           />
           Has Secondary Responsible?
         </label>
@@ -406,27 +398,29 @@ const AddTransactionModal = () => {
           </select>
         </div>
 
-        <label className="flex items-center gap-2 font-bold text-sm">
+        <label className="flex items-center gap-2 font-bold text-xs sm:text-sm">
           <input
             type="checkbox"
             name="isReference"
             checked={formData.isReference}
             onChange={handleChange}
+            className="w-4 h-4"
           />
           Is Reference?
         </label>
 
-        <label className="flex items-center gap-2 font-bold text-sm">
+        <label className="flex items-center gap-2 font-bold text-xs sm:text-sm">
           <input
             type="checkbox"
             name="isActive"
             checked={formData.isActive}
             onChange={handleChange}
+            className="w-4 h-4"
           />
           Is Active?
         </label>
 
-        <div className="col-span-2">
+        <div className="col-span-1 md:col-span-2">
           <label className={labelClass}>Description</label>
           <textarea
             className={inputClass}
@@ -438,10 +432,10 @@ const AddTransactionModal = () => {
         </div>
 
         {/* BUTTONS */}
-        <div className="col-span-2 flex justify-end gap-4 mt-4">
+        <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 mt-3 sm:mt-4">
           <Link
             to="/dashboard/services/transactions"
-            className="px-5 py-2 border rounded-xl"
+            className="px-4 py-2 sm:px-5 border rounded-lg sm:rounded-xl text-center text-sm sm:text-base"
           >
             Cancel
           </Link>
@@ -449,7 +443,7 @@ const AddTransactionModal = () => {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-xl"
+            className="px-5 py-2 sm:px-6 bg-blue-600 text-white rounded-lg sm:rounded-xl text-sm sm:text-base"
           >
             {loading ? "Saving..." : "Add"}
           </button>

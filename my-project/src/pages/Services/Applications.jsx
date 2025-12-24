@@ -21,7 +21,7 @@ const Applications = () => {
           }
         );
 
-        console.log(res.data, "API Response");
+        // console.log(res.data, "API Response");
 
         setApplications(res.data.data);
       } catch (err) {

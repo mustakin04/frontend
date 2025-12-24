@@ -16,24 +16,24 @@ export default function ViewApplicationModal({
 
   return (
     <div
-      className={`max-w-4xl mx-auto p-6 rounded-2xl shadow-2xl bg-gradient-to-br from-slate-50 via-white to-indigo-50 border border-indigo-200 ${className}`}
+      className={`max-w-4xl mx-auto p-4 sm:p-6 rounded-2xl shadow-2xl bg-gradient-to-br from-slate-50 via-white to-indigo-50 border border-indigo-200 ${className}`}
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
             {application.title || "Application"}
           </h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-xs sm:text-sm text-gray-600 mt-1">
             {application.account || "—"} • {application.entity || "—"}
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
           {onEdit && (
             <button
               onClick={() => onEdit(application._id)}
-              className="p-2 rounded-xl bg-indigo-100 text-indigo-700 hover:bg-indigo-200 shadow"
+              className="flex-1 sm:flex-none p-2 rounded-xl bg-indigo-100 text-indigo-700 hover:bg-indigo-200 shadow"
             >
               <Edit2 size={18} />
             </button>
@@ -42,7 +42,7 @@ export default function ViewApplicationModal({
           {onClose && (
             <button
               onClick={() => onClose(application._id)}
-              className="p-2 rounded-xl bg-red-100 text-red-700 hover:bg-red-200 shadow"
+              className="flex-1 sm:flex-none p-2 rounded-xl bg-red-100 text-red-700 hover:bg-red-200 shadow"
             >
               <X size={18} />
             </button>
@@ -51,7 +51,7 @@ export default function ViewApplicationModal({
       </div>
 
       {/* Basic Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <InfoBox title="Client">
           <p className="font-semibold">{application.client || "—"}</p>
         </InfoBox>
@@ -67,7 +67,7 @@ export default function ViewApplicationModal({
       </div>
 
       {/* Academic / Education */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <InfoBox title="Education">
           <p className="font-semibold">
             University: {application.university || "—"}
@@ -91,14 +91,14 @@ export default function ViewApplicationModal({
 
       {/* Notes / Description */}
       {application.notes && (
-        <div className="mt-6 bg-white/70 p-4 rounded-xl border">
+        <div className="mt-4 sm:mt-6 bg-white/70 p-3 sm:p-4 rounded-xl border">
           <h3 className="text-xs uppercase text-gray-500 font-bold">Notes</h3>
-          <p className="mt-2">{application.notes}</p>
+          <p className="mt-2 text-sm sm:text-base">{application.notes}</p>
         </div>
       )}
 
       {/* System Info */}
-      <div className="mt-6 text-sm text-gray-600">
+      <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-600 space-y-1">
         <p>Created: {formatDate(application.createdAt)}</p>
         <p>Updated: {formatDate(application.updatedAt)}</p>
       </div>
@@ -108,8 +108,8 @@ export default function ViewApplicationModal({
 
 /* Reusable Info Box */
 const InfoBox = ({ title, children }) => (
-  <div className="bg-white/70 p-4 rounded-xl shadow-sm border">
+  <div className="bg-white/70 p-3 sm:p-4 rounded-xl shadow-sm border">
     <h3 className="text-xs uppercase text-gray-500 font-bold">{title}</h3>
-    <div className="mt-2">{children}</div>
+    <div className="mt-2 text-sm sm:text-base">{children}</div>
   </div>
 );

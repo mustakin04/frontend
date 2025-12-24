@@ -20,7 +20,7 @@ const ExternalClients = () => {
           }
         );
 
-        setExternalClients(res.data.clients);
+        setExternalClients(res.data.data);
         console.log(res.data,"ex")
       } catch (err) {
         console.error("Failed to fetch external clients:", err);
@@ -31,13 +31,13 @@ const ExternalClients = () => {
   }, []);
 
   return (
-    <div className="p-6 max-w-full">
+    <div className="md:p-6 max-w-full">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">External Clients</h1>
+        <h1 className="md:text-2xl font-bold">External Clients</h1>
 
         <Link
           to="/dashboard/sales/external/addExternalClient"
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+          className="bg-green-600 text-white px-2 md:px-4 py-2 rounded-lg hover:bg-green-700"
         >
           + Add External Client
         </Link>

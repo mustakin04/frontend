@@ -72,6 +72,7 @@ const DashboardPage = () => {
           }
         );
         setExternalClient(res.data.count);
+        // console.log(res.data,"dataaaaa")
       } catch (err) {
         console.error("Failed to fetch external clients:", err);
       }
@@ -93,7 +94,7 @@ const DashboardPage = () => {
           }
         );
 
-        console.log(res.data, "API Response");
+        // console.log(res.data, "API Response");
 
         // FIXED
         setTransactions(res.data.count);
@@ -118,7 +119,7 @@ const DashboardPage = () => {
           }
         );
 
-        console.log(res.data, "API Response");
+        // console.log(res.data, "API Response appp");
 
         // same as code-1
         setApplications(res.data.count);
@@ -131,111 +132,117 @@ const DashboardPage = () => {
   }, []); // same as code-1
 
   return (
-    <div className="pb-10">
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-      {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
-        {/* Total Leads */}
-        <div
-          className="bg-white p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
-          onClick={() => navigate("/dashboard/sales/leads")}
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-blue-50 group-hover:bg-blue-100 transition">
-              <Users className="size-6 text-blue-600" />
-            </div>
+  <div className="pb-10 px-1 sm:px-0">
+    <h1 className="text-2xl md:text-3xl font-bold mb-6">
+      Dashboard
+    </h1>
 
-            <div>
-              <h3 className="text-gray-500 text-sm">Total Leads</h3>
-              <p className="text-3xl font-bold mt-1">{lead}</p>
-            </div>
+    {/* Cards Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
+      {/* Total Leads */}
+      <div
+        className="bg-white p-4 md:p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
+        onClick={() => navigate("/dashboard/sales/leads")}
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-blue-50 group-hover:bg-blue-100">
+            <Users className="size-6 text-blue-600" />
           </div>
-        </div>
-
-        {/* Total Clients */}
-        <div
-          className="bg-white p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
-          onClick={() => navigate("/dashboard/sales/clients")}
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-green-50 group-hover:bg-green-100 transition">
-              <UserCheck className="size-6 text-green-600" />
-            </div>
-
-            <div>
-              <h3 className="text-gray-500 text-sm">Total Clients</h3>
-              <p className="text-3xl font-bold mt-1">{client}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* External Clients */}
-        <div
-          className="bg-white p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
-          onClick={() => navigate("/dashboard/sales/external")}
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-purple-50 group-hover:bg-purple-100 transition">
-              <Briefcase className="size-6 text-purple-600" />
-            </div>
-
-            <div>
-              <h3 className="text-gray-500 text-sm">External Clients</h3>
-              <p className="text-3xl font-bold mt-1">{externalClient}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Total Transactions */}
-        <div
-          className="bg-white p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
-          onClick={() => navigate("/dashboard/services/transactions")}
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-yellow-50 group-hover:bg-yellow-100 transition">
-              <CreditCard className="size-6 text-yellow-600" />
-            </div>
-
-            <div>
-              <h3 className="text-gray-500 text-sm">Total Transactions</h3>
-              <p className="text-3xl font-bold mt-1">{transactions}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Total Applications */}
-        <div
-          className="bg-white p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
-          onClick={() => navigate("/dashboard/services/applications")}
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-red-50 group-hover:bg-red-100 transition">
-              <FileText className="size-6 text-red-600" />
-            </div>
-
-            <div>
-              <h3 className="text-gray-500 text-sm">Total Applications</h3>
-              <p className="text-3xl font-bold mt-1">{applications}</p>
-            </div>
+          <div>
+            <h3 className="text-gray-500 text-sm">Total Leads</h3>
+            <p className="text-2xl md:text-3xl font-bold">{lead}</p>
           </div>
         </div>
       </div>
 
-      {/* Recent Leads */}
-      <div className="mt-10 bg-white p-6 shadow-md rounded-2xl border">
-        <div className="flex w-full gap-10">
-          <div className="w-[50%] h-[800px] overflow-hidden overflow-y-scroll">
-            <h2 className="text-2xl font-semibold mb-4">Recent Leads</h2>
-            <LeadCards></LeadCards>
+      {/* Total Clients */}
+      <div
+        className="bg-white p-4 md:p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
+        onClick={() => navigate("/dashboard/sales/clients")}
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-green-50 group-hover:bg-green-100">
+            <UserCheck className="size-6 text-green-600" />
           </div>
-          <div className="w-[50%] h-[800px] overflow-hidden overflow-y-scroll">
-            <h2 className="text-2xl font-semibold mb-4">Recent Clients</h2>
-            <ClientCards></ClientCards>
+          <div>
+            <h3 className="text-gray-500 text-sm">Total Clients</h3>
+            <p className="text-2xl md:text-3xl font-bold">{client}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* External Clients */}
+      <div
+        className="bg-white p-4 md:p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
+        onClick={() => navigate("/dashboard/sales/external")}
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-purple-50 group-hover:bg-purple-100">
+            <Briefcase className="size-6 text-purple-600" />
+          </div>
+          <div>
+            <h3 className="text-gray-500 text-sm">External Clients</h3>
+            <p className="text-2xl md:text-3xl font-bold">{externalClient}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Transactions */}
+      <div
+        className="bg-white p-4 md:p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
+        onClick={() => navigate("/dashboard/services/transactions")}
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-yellow-50 group-hover:bg-yellow-100">
+            <CreditCard className="size-6 text-yellow-600" />
+          </div>
+          <div>
+            <h3 className="text-gray-500 text-sm">Total Transactions</h3>
+            <p className="text-2xl md:text-3xl font-bold">{transactions}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Applications */}
+      <div
+        className="bg-white p-4 md:p-6 shadow-md rounded-2xl border hover:shadow-xl transition-all duration-300 group cursor-pointer"
+        onClick={() => navigate("/dashboard/services/applications")}
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-red-50 group-hover:bg-red-100">
+            <FileText className="size-6 text-red-600" />
+          </div>
+          <div>
+            <h3 className="text-gray-500 text-sm">Total Applications</h3>
+            <p className="text-2xl md:text-3xl font-bold">{applications}</p>
           </div>
         </div>
       </div>
     </div>
-  );
+
+    {/* Recent Section */}
+    <div className="mt-8 bg-white p-4 md:p-6 shadow-md rounded-2xl border">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Leads */}
+        <div className="lg:h-[700px] overflow-y-auto">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4">
+            Recent Leads
+          </h2>
+          <LeadCards />
+        </div>
+
+        {/* Recent Clients */}
+        <div className="lg:h-[700px] overflow-y-auto">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4">
+            Recent Clients
+          </h2>
+          <ClientCards />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 };
 
 export default DashboardPage;

@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { data, Link } from "react-router";
 import axios from "axios";
 import { motion } from "framer-motion";
-
+  /* ---------------- UI HELPERS ---------------- */
+  const Input = ({ label, children }) => (
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium text-gray-600">{label}</label>
+      {children}
+    </div>
+  );
 export default function ApplicationModal() {
   /* ---------------- STATES ---------------- */
   const [clients, setClients] = useState([]);
@@ -46,7 +52,7 @@ export default function ApplicationModal() {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "http://localhost:3000/api/v1/application/createApplication",
+        "https://crm-backend-ig92.onrender.com/api/v1/application/createApplication",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -66,7 +72,7 @@ export default function ApplicationModal() {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "http://localhost:3000/api/v1/transaction/getTransactions",
+          "https://crm-backend-ig92.onrender.com/api/v1/transaction/getTransactions",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -74,7 +80,7 @@ export default function ApplicationModal() {
         );
 
         setTransactions(res.data.data);
-        console.log(res.data.data, "transaciton");
+        // console.log(res.data.data, "transaciton");
       } catch (err) {
         console.error("Error fetching transactions:", err);
       }
@@ -90,7 +96,7 @@ export default function ApplicationModal() {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "http://localhost:3000/api/v1/client/getClient",
+          "https://crm-backend-ig92.onrender.com/api/v1/client/getClient",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -107,13 +113,7 @@ export default function ApplicationModal() {
     fetchClients();
   }, []);
 
-  /* ---------------- UI HELPERS ---------------- */
-  const Input = ({ label, children }) => (
-    <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-600">{label}</label>
-      {children}
-    </div>
-  );
+
 
   const baseInput =
     "w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";

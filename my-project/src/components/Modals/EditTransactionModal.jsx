@@ -52,7 +52,7 @@ const EditTransactionModal = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:3000/api/v1/client/getClient",
+          "https://crm-backend-ig92.onrender.com/api/v1/client/getClient",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -91,7 +91,7 @@ const EditTransactionModal = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:3000/api/v1/transaction/updateTransaction/${id}`,
+        `https://crm-backend-ig92.onrender.com/api/v1/transaction/updateTransaction/${id}`,
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -110,18 +110,18 @@ const EditTransactionModal = () => {
     "w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none";
   const labelClass = "block mb-1 font-bold text-sm";
   const sectionTitle =
-    "col-span-2 font-semibold text-lg text-gray-700 mt-6 border-b pb-1";
+    "col-span-1 sm:col-span-2 font-semibold text-base sm:text-lg text-gray-700 mt-4 sm:mt-6 border-b pb-1";
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center pt-10 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-start sm:pt-10 z-50 overflow-y-auto">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-5 overflow-y-scroll"
+        className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl w-full max-w-7xl mx-2 sm:mx-4 my-4 sm:my-0 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 max-h-[95vh] overflow-y-auto"
       >
-        <h2 className="text-2xl font-bold col-span-2">Edit Transaction</h2>
+        <h2 className="text-xl sm:text-2xl font-bold col-span-1 sm:col-span-2">Edit Transaction</h2>
 
         {error && (
-          <div className="col-span-2 bg-red-50 text-red-600 p-3 rounded-xl">
+          <div className="col-span-1 sm:col-span-2 bg-red-50 text-red-600 p-3 rounded-xl text-sm">
             {error}
           </div>
         )}
@@ -172,7 +172,7 @@ const EditTransactionModal = () => {
           </select>
         </div>
 
-        <div>
+        <div className="col-span-1 sm:col-span-2">
           <label className={labelClass}>Title *</label>
           <input
             className={inputClass}
@@ -299,7 +299,7 @@ const EditTransactionModal = () => {
           />
         </div>
 
-        <div>
+        <div className="col-span-1 sm:col-span-2">
           <label className={labelClass}>Due</label>
           <input
             type="number"
@@ -330,7 +330,7 @@ const EditTransactionModal = () => {
           <input className={inputClass} value={formData.responsible} disabled />
         </div>
 
-        <label className="flex items-center gap-2 col-span-2 font-bold text-sm">
+        <label className="flex items-center gap-2 col-span-1 sm:col-span-2 font-bold text-sm">
           <input
             type="checkbox"
             name="hasSecondaryResponsible"
@@ -381,27 +381,29 @@ const EditTransactionModal = () => {
           </select>
         </div>
 
-        <label className="flex items-center gap-2 font-bold text-sm">
-          <input
-            type="checkbox"
-            name="isReference"
-            checked={formData.isReference}
-            onChange={handleChange}
-          />
-          Is Reference?
-        </label>
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <label className="flex items-center gap-2 font-bold text-sm">
+            <input
+              type="checkbox"
+              name="isReference"
+              checked={formData.isReference}
+              onChange={handleChange}
+            />
+            Is Reference?
+          </label>
 
-        <label className="flex items-center gap-2 font-bold text-sm">
-          <input
-            type="checkbox"
-            name="isActive"
-            checked={formData.isActive}
-            onChange={handleChange}
-          />
-          Is Active?
-        </label>
+          <label className="flex items-center gap-2 font-bold text-sm">
+            <input
+              type="checkbox"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleChange}
+            />
+            Is Active?
+          </label>
+        </div>
 
-        <div className="col-span-2">
+        <div className="col-span-1 sm:col-span-2">
           <label className={labelClass}>Description</label>
           <textarea
             className={inputClass}
@@ -413,10 +415,10 @@ const EditTransactionModal = () => {
         </div>
 
         {/* BUTTONS */}
-        <div className="col-span-2 flex justify-end gap-4 mt-4">
+        <div className="col-span-1 sm:col-span-2 flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 mt-4">
           <Link
             to="/dashboard/services/transactions"
-            className="px-5 py-2 border rounded-xl"
+            className="px-5 py-2 border rounded-xl text-center"
           >
             Cancel
           </Link>

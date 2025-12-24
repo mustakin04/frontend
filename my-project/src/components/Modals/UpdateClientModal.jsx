@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 
 export default function UpdateClientModal() {
     const {id}=useParams()
-    console.log(id,"ami")
   const initialState = {
     account: "Atlas Study", // STATIC VALUE
     entity: "",
@@ -60,7 +59,7 @@ export default function UpdateClientModal() {
       const token = localStorage.getItem("token");
 
       const res = await axios.put(
-        `http://localhost:3000/api/v1/client/updateClient/${id}`,
+        `https://crm-backend-ig92.onrender.com/api/v1/client/updateClient/${id}`,
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -82,29 +81,29 @@ export default function UpdateClientModal() {
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="p-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 border-[3px] border-slate-800 rounded-2xl bg-[#fefaf5]"
+      className="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 border-[3px] border-slate-800 rounded-2xl bg-[#fefaf5]"
     >
-      <div className="col-span-2 flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-extrabold text-slate-900">Update Client</h2>
+      <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Update Client</h2>
         <motion.button
           whileTap={{ scale: 0.92 }}
-          className="px-6 py-2 text-slate-900 bg-white border-[3px] border-slate-800 rounded-xl"
+          className="px-6 py-2 text-slate-900 bg-white border-[3px] border-slate-800 rounded-xl w-full sm:w-auto"
         >
           <Link to="/dashboard/sales/clients">Cancel</Link>
         </motion.button>
       </div>
 
-      {error && <div className="col-span-2 text-red-600">{error}</div>}
+      {error && <div className="col-span-1 md:col-span-2 text-red-600 text-sm">{error}</div>}
 
       {/* ------------------ ACCOUNT (STATIC) ------------------ */}
       <div>
-        <label className="block mb-1 font-bold">Account</label>
+        <label className="block mb-1 font-bold text-sm">Account</label>
         <input disabled className={inputBase} value="Atlas Study" />
       </div>
 
       {/* ------------------ ENTITY DROPDOWN ------------------ */}
       <div>
-        <label className="block mb-1 font-bold">Entity</label>
+        <label className="block mb-1 font-bold text-sm">Entity</label>
         <select
           name="entity"
           value={formData.entity}
@@ -121,7 +120,7 @@ export default function UpdateClientModal() {
 
       {/* NAME FIELDS */}
       <div>
-        <label className="block mb-1 font-bold">First Name,Middle Name</label>
+        <label className="block mb-1 font-bold text-sm">First Name,Middle Name</label>
         <input
           name="firstName"
           value={formData.firstName}
@@ -130,7 +129,7 @@ export default function UpdateClientModal() {
         />
       </div>
       <div>
-        <label className="block mb-1 font-bold">Last Name</label>
+        <label className="block mb-1 font-bold text-sm">Last Name</label>
         <input
           name="lastName"
           value={formData.lastName}
@@ -141,7 +140,7 @@ export default function UpdateClientModal() {
 
       {/* DOB */}
       <div>
-        <label className="block mb-1 font-bold">Date of Birth</label>
+        <label className="block mb-1 font-bold text-sm">Date of Birth</label>
         <input
           type="date"
           name="dob"
@@ -153,7 +152,7 @@ export default function UpdateClientModal() {
 
       {/* PASSPORT */}
       <div>
-        <label className="block mb-1 font-bold">Passport Number</label>
+        <label className="block mb-1 font-bold text-sm">Passport Number</label>
         <input
           name="passport"
           value={formData.passport}
@@ -164,7 +163,7 @@ export default function UpdateClientModal() {
 
       {/* Nationality */}
       <div>
-        <label className="block mb-1 font-bold">Nationality</label>
+        <label className="block mb-1 font-bold text-sm">Nationality</label>
         <select
           name="nationality"
           value={formData.nationality}
@@ -207,7 +206,7 @@ export default function UpdateClientModal() {
 
       {/* CIVIL STATUS */}
       <div>
-        <label className="block mb-1 font-bold">Civil Status</label>
+        <label className="block mb-1 font-bold text-sm">Civil Status</label>
         <select
           name="civilStatus"
           value={formData.civilStatus}
@@ -224,7 +223,7 @@ export default function UpdateClientModal() {
 
       {/* CONTACT */}
       <div>
-        <label className="block mb-1 font-bold">Email</label>
+        <label className="block mb-1 font-bold text-sm">Email</label>
         <input
           name="email"
           value={formData.email}
@@ -233,7 +232,7 @@ export default function UpdateClientModal() {
         />
       </div>
       <div>
-        <label className="block mb-1 font-bold">Phone Number</label>
+        <label className="block mb-1 font-bold text-sm">Phone Number</label>
         <input
           name="phone"
           value={formData.phone}
@@ -244,7 +243,7 @@ export default function UpdateClientModal() {
 
       {/* EMERGENCY CONTACT */}
       <div>
-        <label className="block mb-1 font-bold">Emergency Contact Name</label>
+        <label className="block mb-1 font-bold text-sm">Emergency Contact Name</label>
         <input
           name="emergencyContact"
           value={formData.emergencyContact}
@@ -253,7 +252,7 @@ export default function UpdateClientModal() {
         />
       </div>
       <div>
-        <label className="block mb-1 font-bold">Emergency Phone</label>
+        <label className="block mb-1 font-bold text-sm">Emergency Phone</label>
         <input
           name="emergencyPhone"
           value={formData.emergencyPhone}
@@ -264,7 +263,7 @@ export default function UpdateClientModal() {
 
       {/* LOCATION FIELDS */}
       <div>
-        <label className="block mb-1 font-bold">Current Location</label>
+        <label className="block mb-1 font-bold text-sm">Current Location</label>
         <select
           name="currentLocation"
           value={formData.currentLocation}
@@ -283,7 +282,7 @@ export default function UpdateClientModal() {
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">Address</label>
+        <label className="block mb-1 font-bold text-sm">Address</label>
         <input
           name="address"
           value={formData.address}
@@ -293,7 +292,7 @@ export default function UpdateClientModal() {
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">Police Station</label>
+        <label className="block mb-1 font-bold text-sm">Police Station</label>
         <input
           name="policeStation"
           value={formData.policeStation}
@@ -303,7 +302,7 @@ export default function UpdateClientModal() {
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">District</label>
+        <label className="block mb-1 font-bold text-sm">District</label>
         <input
           name="district"
           value={formData.district}
@@ -314,7 +313,7 @@ export default function UpdateClientModal() {
 
       {/* RESPONSIBLE TYPE */}
       <div>
-        <label className="block mb-1 font-bold">Responsible Type</label>
+        <label className="block mb-1 font-bold text-sm">Responsible Type</label>
         <select
           name="responsibleType"
           value={formData.responsibleType}
@@ -330,7 +329,7 @@ export default function UpdateClientModal() {
 
       {/* FIRST PREFERENCE SERVICE */}
       <div>
-        <label className="block mb-1 font-bold">First Preference Service</label>
+        <label className="block mb-1 font-bold text-sm">First Preference Service</label>
         <select
           name="prefService"
           value={formData.prefService}
@@ -346,7 +345,7 @@ export default function UpdateClientModal() {
 
       {/* STAGE */}
       <div>
-        <label className="block mb-1 font-bold">Stage</label>
+        <label className="block mb-1 font-bold text-sm">Stage</label>
         <select
           name="stage"
           value={formData.stage}
@@ -362,7 +361,7 @@ export default function UpdateClientModal() {
 
       {/* CLIENT TYPE */}
       <div>
-        <label className="block mb-1 font-bold">Type</label>
+        <label className="block mb-1 font-bold text-sm">Type</label>
         <select
           name="type"
           value={formData.type}
@@ -377,7 +376,7 @@ export default function UpdateClientModal() {
 
       {/* RESPONSIBLE */}
       <div>
-        <label className="block mb-1 font-bold">Responsible</label>
+        <label className="block mb-1 font-bold text-sm">Responsible</label>
         <select
           name="responsible"
           value={formData.responsible}
@@ -392,7 +391,7 @@ export default function UpdateClientModal() {
 
       {/* REF TYPE */}
       <div>
-        <label className="block mb-1 font-bold">Referral Type</label>
+        <label className="block mb-1 font-bold text-sm">Referral Type</label>
         <select
           name="refType"
           value={formData.refType}
@@ -407,7 +406,7 @@ export default function UpdateClientModal() {
 
       {/* REFERRED BY */}
       <div>
-        <label className="block mb-1 font-bold">Referred By</label>
+        <label className="block mb-1 font-bold text-sm">Referred By</label>
         <input
           name="referredBy"
           value={formData.referredBy}
@@ -418,7 +417,7 @@ export default function UpdateClientModal() {
 
       {/* NEXT ACTION */}
       <div>
-        <label className="block mb-1 font-bold">Next Action</label>
+        <label className="block mb-1 font-bold text-sm">Next Action</label>
         <select
           name="nextAction"
           value={formData.nextAction}
@@ -432,7 +431,7 @@ export default function UpdateClientModal() {
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">Next Action Date</label>
+        <label className="block mb-1 font-bold text-sm">Next Action Date</label>
         <input
           type="date"
           name="nextActionDate"
@@ -444,7 +443,7 @@ export default function UpdateClientModal() {
 
       {/* AGENT PROMO */}
       <div>
-        <label className="block mb-1 font-bold">Agent Promotion</label>
+        <label className="block mb-1 font-bold text-sm">Agent Promotion</label>
         <select
           name="agentPromo"
           value={formData.agentPromo}
@@ -459,7 +458,7 @@ export default function UpdateClientModal() {
 
       {/* ACTIVE STATUS */}
       <div>
-        <label className="block mb-1 font-bold">Is Active?</label>
+        <label className="block mb-1 font-bold text-sm">Is Active?</label>
         <select
           name="active"
           value={formData.active}
@@ -473,8 +472,8 @@ export default function UpdateClientModal() {
       </div>
 
       {/* DESCRIPTION */}
-      <div className="col-span-2">
-        <label className="block mb-1 font-bold">Description</label>
+      <div className="col-span-1 md:col-span-2">
+        <label className="block mb-1 font-bold text-sm">Description</label>
         <textarea
           name="description"
           rows={3}
@@ -485,12 +484,12 @@ export default function UpdateClientModal() {
       </div>
   
       {/* BUTTON */}
-      <div className="col-span-2 flex justify-end">
+      <div className="col-span-1 md:col-span-2 flex justify-end">
         <motion.button
           whileTap={{ scale: 0.94 }}
           onClick={handleClick}
           disabled={loading}
-          className="px-6 py-3 font-extrabold text-white bg-indigo-600 rounded-xl border-[3px] border-indigo-900"
+          className="px-6 py-3 font-extrabold text-white bg-indigo-600 rounded-xl border-[3px] border-indigo-900 w-full sm:w-auto"
         >
           {loading ? "Adding..." : "Add Client"}
         </motion.button>

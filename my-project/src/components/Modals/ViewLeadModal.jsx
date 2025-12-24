@@ -28,25 +28,25 @@ export default function ViewLeadModal({
 
   return (
     <div
-      className={`max-w-3xl mx-auto p-6 rounded-2xl shadow-2xl bg-gradient-to-br from-indigo-50 via-white to-purple-50 border border-indigo-200 ${className}`}
+      className={`max-w-3xl mx-auto p-4 sm:p-6 rounded-2xl shadow-2xl bg-gradient-to-br from-indigo-50 via-white to-purple-50 border border-indigo-200 ${className}`}
     >
-      <div className="flex items-start gap-6">
+      <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
         {/* Avatar */}
-        <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-3xl font-bold shadow-lg">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-2xl sm:text-3xl font-bold shadow-lg">
           {initials}
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 w-full">
           {/* Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">{fullName}</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{fullName}</h2>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1">
                 {lead.account || "—"} • {lead.type || "—"}
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {onEdit && (
                 <button
                   onClick={() => onEdit(lead._id)}
@@ -68,16 +68,16 @@ export default function ViewLeadModal({
           </div>
 
           {/* Contact / Personal / Service */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Contact */}
-            <div className="bg-white/70 p-4 rounded-xl shadow-sm border">
+            <div className="bg-white/70 p-3 sm:p-4 rounded-xl shadow-sm border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Contact
               </h3>
-              <p className="mt-2 font-semibold text-lg">{lead.phone || "—"}</p>
-              <p className="text-sm text-gray-600">{lead.email || "—"}</p>
+              <p className="mt-2 font-semibold text-base sm:text-lg">{lead.phone || "—"}</p>
+              <p className="text-xs sm:text-sm text-gray-600">{lead.email || "—"}</p>
 
-              <div className="mt-3 flex gap-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {lead.phone && (
                   <a
                     href={`tel:${lead.phone}`}
@@ -98,27 +98,27 @@ export default function ViewLeadModal({
             </div>
 
             {/* Personal */}
-            <div className="bg-white/70 p-4 rounded-xl shadow-sm border">
+            <div className="bg-white/70 p-3 sm:p-4 rounded-xl shadow-sm border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Personal
               </h3>
-              <p className="mt-2 font-semibold">
+              <p className="mt-2 font-semibold text-sm sm:text-base">
                 {lead.nationality || "—"} • {lead.civilStatus || "—"}
               </p>
-              <p className="text-sm">DOB: {lead.dob || "—"}</p>
-              <p className="text-sm">Passport: {lead.passport || "—"}</p>
+              <p className="text-xs sm:text-sm">DOB: {lead.dob || "—"}</p>
+              <p className="text-xs sm:text-sm">Passport: {lead.passport || "—"}</p>
             </div>
 
             {/* Service */}
-            <div className="bg-white/70 p-4 rounded-xl shadow-sm border">
+            <div className="bg-white/70 p-3 sm:p-4 rounded-xl shadow-sm border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Service
               </h3>
-              <p className="mt-2 font-semibold">
+              <p className="mt-2 font-semibold text-sm sm:text-base">
                 {lead.prefService || "—"}
               </p>
-              <p className="text-sm">Stage: {lead.stage || "—"}</p>
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">Stage: {lead.stage || "—"}</p>
+              <p className="text-xs sm:text-sm">
                 Responsible: {lead.responsible || "—"} (
                 {lead.responsibleType || "—"})
               </p>
@@ -126,23 +126,23 @@ export default function ViewLeadModal({
           </div>
 
           {/* Location & Next Action */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-50 p-4 rounded-xl border">
+          <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="bg-blue-50 p-3 sm:p-4 rounded-xl border">
               <h3 className="text-xs uppercase text-blue-700 font-bold">
                 Location
               </h3>
-              <p className="mt-2 font-semibold">
+              <p className="mt-2 font-semibold text-sm sm:text-base">
                 {lead.currentLocation ||
                   lead.district ||
                   lead.address ||
                   "—"}
               </p>
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 Police Station: {lead.policeStation || "—"}
               </p>
             </div>
 
-            <div className="bg-purple-50 p-4 rounded-xl border">
+            <div className="bg-purple-50 p-3 sm:p-4 rounded-xl border">
               <h3 className="text-xs uppercase text-purple-700 font-bold">
                 Next Action
               </h3>
@@ -150,20 +150,20 @@ export default function ViewLeadModal({
               <div className="flex items-center gap-3 mt-2">
                 <Calendar size={18} />
                 <div>
-                  <p className="font-semibold">
+                  <p className="font-semibold text-sm sm:text-base">
                     {lead.nextAction || "—"}
                   </p>
-                  <p className="text-sm">
+                  <p className="text-xs sm:text-sm">
                     {formatDate(lead.nextActionDate)}
                   </p>
                 </div>
               </div>
 
-              <p className="mt-3 text-sm">
+              <p className="mt-3 text-xs sm:text-sm">
                 Created: {formatDate(lead.createdAt)} by{" "}
                 {lead.createdBy?.name || "—"}
               </p>
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 Updated: {formatDate(lead.updatedAt)}
               </p>
             </div>
@@ -171,26 +171,26 @@ export default function ViewLeadModal({
 
           {/* Notes */}
           {lead.description && (
-            <div className="mt-6 bg-white/70 p-4 rounded-xl border">
+            <div className="mt-4 sm:mt-6 bg-white/70 p-3 sm:p-4 rounded-xl border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Notes
               </h3>
-              <p className="mt-2">{lead.description}</p>
+              <p className="mt-2 text-sm sm:text-base">{lead.description}</p>
             </div>
           )}
 
           {/* Tags */}
-          <div className="mt-6 flex flex-wrap gap-3">
-            <span className="px-4 py-1 text-sm rounded-full bg-green-100 text-green-700">
+          <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
+            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-green-100 text-green-700">
               Active: {lead.active || "—"}
             </span>
-            <span className="px-4 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700">
+            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-yellow-100 text-yellow-700">
               Agent Promo: {lead.agentPromo || "—"}
             </span>
-            <span className="px-4 py-1 text-sm rounded-full bg-pink-100 text-pink-700">
+            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-pink-100 text-pink-700">
               Ref: {lead.refType || "—"} — {lead.referredBy || "—"}
             </span>
-            <span className="px-4 py-1 text-sm rounded-full bg-indigo-100 text-indigo-700">
+            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-indigo-100 text-indigo-700">
               Entity: {lead.entity || "—"}
             </span>
           </div>

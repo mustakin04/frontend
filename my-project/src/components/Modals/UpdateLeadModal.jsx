@@ -57,14 +57,14 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.put(
-      `http://localhost:3000/api/v1/lead/updateLead/${id}`,
+      `https://crm-backend-ig92.onrender.com/api/v1/lead/updateLead/${id}`,
       formData,
       {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         withCredentials: true,
       }
     );
-    console.log("Lead updated:", res.data);
+    // console.log("Lead updated:", res.data);
     onClose(); // Close modal after successful update
   } catch (error) {
     console.error("Error updating lead:", error);
@@ -74,31 +74,31 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-2 sm:p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="bg-[#fefaf5] rounded-2xl w-full max-w-7xl p-10 border-[3px] border-slate-800 max-h-[90vh] overflow-y-scroll"
+        className="bg-[#fefaf5] rounded-2xl w-full max-w-7xl p-4 sm:p-6 lg:p-10 border-[3px] border-slate-800 max-h-[90vh] overflow-y-scroll"
       >
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-extrabold text-slate-900">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             Update Lead
           </h2>
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-white border-[3px] border-slate-800 rounded-xl font-bold"
+            className="px-6 py-2 bg-white border-[3px] border-slate-800 rounded-xl font-bold w-full sm:w-auto"
           >
             ✕
           </button>
         </div>
 
         {/* FORM */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {/* Lead Owner */}
-          <div className="col-span-2">
-            <label className="font-bold">Lead Owner</label>
+          <div className="col-span-1 md:col-span-2">
+            <label className="font-bold text-sm">Lead Owner</label>
             <input
               name="leadOwner"
               disabled
@@ -110,7 +110,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Account */}
           <div>
-            <label className="font-bold">Account</label>
+            <label className="font-bold text-sm">Account</label>
             <input
               name="account"
               disabled
@@ -122,7 +122,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Entity */}
           <div>
-            <label className="font-bold">Entity</label>
+            <label className="font-bold text-sm">Entity</label>
             <select
               name="entity"
               value={formData.entity}
@@ -139,7 +139,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* First Name & Last Name */}
           <div>
-            <label className="font-bold">First Name</label>
+            <label className="font-bold text-sm">First Name</label>
             <input
               name="firstName"
               value={formData.firstName}
@@ -148,7 +148,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             />
           </div>
           <div>
-            <label className="font-bold">Last Name</label>
+            <label className="font-bold text-sm">Last Name</label>
             <input
               name="lastName"
               value={formData.lastName}
@@ -159,7 +159,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* DOB & Passport */}
           <div>
-            <label className="font-bold">Date of Birth</label>
+            <label className="font-bold text-sm">Date of Birth</label>
             <input
               type="date"
               name="dob"
@@ -169,7 +169,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             />
           </div>
           <div>
-            <label className="font-bold">Passport Number</label>
+            <label className="font-bold text-sm">Passport Number</label>
             <input
               name="passport"
               value={formData.passport}
@@ -180,7 +180,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Nationality & Civil Status */}
           <div>
-            <label className="font-bold">Nationality</label>
+            <label className="font-bold text-sm">Nationality</label>
             <select
               name="nationality"
               value={formData.nationality}
@@ -194,7 +194,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Civil Status</label>
+            <label className="font-bold text-sm">Civil Status</label>
             <select
               name="civilStatus"
               value={formData.civilStatus}
@@ -209,7 +209,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Email & Phone */}
           <div>
-            <label className="font-bold">Email</label>
+            <label className="font-bold text-sm">Email</label>
             <input
               name="email"
               value={formData.email}
@@ -218,7 +218,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             />
           </div>
           <div>
-            <label className="font-bold">Phone</label>
+            <label className="font-bold text-sm">Phone</label>
             <input
               name="phone"
               value={formData.phone}
@@ -229,7 +229,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Emergency Contact */}
           <div>
-            <label className="font-bold">Emergency Contact Name</label>
+            <label className="font-bold text-sm">Emergency Contact Name</label>
             <input
               name="emergencyContact"
               value={formData.emergencyContact}
@@ -238,7 +238,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             />
           </div>
           <div>
-            <label className="font-bold">Emergency Phone</label>
+            <label className="font-bold text-sm">Emergency Phone</label>
             <input
               name="emergencyPhone"
               value={formData.emergencyPhone}
@@ -249,7 +249,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Location & Address */}
           <div>
-            <label className="font-bold">Current Location</label>
+            <label className="font-bold text-sm">Current Location</label>
             <select
               name="currentLocation"
               value={formData.currentLocation}
@@ -263,7 +263,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Address</label>
+            <label className="font-bold text-sm">Address</label>
             <input
               name="address"
               value={formData.address}
@@ -274,7 +274,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Police Station & District */}
           <div>
-            <label className="font-bold">Police Station</label>
+            <label className="font-bold text-sm">Police Station</label>
             <input
               name="policeStation"
               value={formData.policeStation}
@@ -283,7 +283,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             />
           </div>
           <div>
-            <label className="font-bold">District</label>
+            <label className="font-bold text-sm">District</label>
             <input
               name="district"
               value={formData.district}
@@ -294,7 +294,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Responsible Type */}
           <div>
-            <label className="font-bold">Responsible Type</label>
+            <label className="font-bold text-sm">Responsible Type</label>
             <select
               name="responsibleType"
               value={formData.responsibleType}
@@ -309,7 +309,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Services */}
           <div>
-            <label className="font-bold">Preferred Service</label>
+            <label className="font-bold text-sm">Preferred Service</label>
             <select
               name="prefService"
               value={formData.prefService}
@@ -322,7 +322,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">First Service Preference</label>
+            <label className="font-bold text-sm">First Service Preference</label>
             <select
               name="firstServicePref"
               value={formData.firstServicePref}
@@ -335,7 +335,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Second Service Preference</label>
+            <label className="font-bold text-sm">Second Service Preference</label>
             <select
               name="secondServicePref"
               value={formData.secondServicePref}
@@ -350,7 +350,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Campaign Code */}
           <div>
-            <label className="font-bold">Campaign Code</label>
+            <label className="font-bold text-sm">Campaign Code</label>
             <input
               name="campaignCode"
               value={formData.campaignCode}
@@ -361,7 +361,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Stage, Type, Responsible */}
           <div>
-            <label className="font-bold">Stage</label>
+            <label className="font-bold text-sm">Stage</label>
             <select
               name="stage"
               value={formData.stage}
@@ -374,7 +374,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Type</label>
+            <label className="font-bold text-sm">Type</label>
             <select
               name="type"
               value={formData.type}
@@ -387,7 +387,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Responsible</label>
+            <label className="font-bold text-sm">Responsible</label>
             <select
               name="responsible"
               value={formData.responsible}
@@ -402,7 +402,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Referral */}
           <div>
-            <label className="font-bold">Referral Type</label>
+            <label className="font-bold text-sm">Referral Type</label>
             <select
               name="refType"
               value={formData.refType}
@@ -415,7 +415,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Referred By</label>
+            <label className="font-bold text-sm">Referred By</label>
             <input
               name="referredBy"
               value={formData.referredBy}
@@ -426,7 +426,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Next Action */}
           <div>
-            <label className="font-bold">Next Action</label>
+            <label className="font-bold text-sm">Next Action</label>
             <select
               name="nextAction"
               value={formData.nextAction}
@@ -439,7 +439,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Next Action Date</label>
+            <label className="font-bold text-sm">Next Action Date</label>
             <input
               type="date"
               name="nextActionDate"
@@ -451,7 +451,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
           {/* Agent Promotion & Active */}
           <div>
-            <label className="font-bold">Agent Promotion</label>
+            <label className="font-bold text-sm">Agent Promotion</label>
             <select
               name="agentPromo"
               value={formData.agentPromo}
@@ -464,7 +464,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold">Is Active?</label>
+            <label className="font-bold text-sm">Is Active?</label>
             <select
               name="active"
               value={formData.active}
@@ -478,8 +478,8 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
           </div>
 
           {/* Description */}
-          <div className="col-span-2">
-            <label className="font-bold">Description</label>
+          <div className="col-span-1 md:col-span-2">
+            <label className="font-bold text-sm">Description</label>
             <textarea
               name="description"
               value={formData.description}
@@ -490,7 +490,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
           </div>
 
           {/* Footer */}
-          <div className="col-span-2 flex justify-end gap-4">
+          <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
             <button
               type="button"
               onClick={onClose}

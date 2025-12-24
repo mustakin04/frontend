@@ -24,6 +24,7 @@ import DashboardPage from "./pages/Dashboard/DashboardPage";
 import UpdateClientModal from './components/Modals/UpdateClientModal';
 import EditTransactionModal from "./components/Modals/EditTransactionModal";
 import UpdateApplicationModal from "./components/Modals/UpdateApplicationModal";
+import UpdateExternalClientModal from "./components/Modals/UpdateExternalClientModal";
 
 function App() {
   const router = createBrowserRouter([
@@ -52,6 +53,7 @@ function App() {
         {path:"sales/clients/updateClient/:id",element:<UpdateClientModal></UpdateClientModal>},
         {path:"/dashboard/sales/external" ,element:<ExternalClients/>},
         {path:"/dashboard/sales/external/addExternalClient" ,element:<AddExternalClientModal/>},
+        {path:"/dashboard/sales/external/updateExternalClient/:id" ,element:<UpdateExternalClientModal/>},
 
         // Services
         { path: "/dashboard/services/transactions", element: <Transactions /> },

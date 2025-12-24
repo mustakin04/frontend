@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function AddClientModal() {
   const initialState = {
-    account: "Atlas Study", // STATIC VALUE
+    account: "Atlas Study",
     entity: "",
     firstName: "",
     lastName: "",
@@ -34,78 +34,59 @@ export default function AddClientModal() {
     active: "",
     description: "",
   };
-    const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [suggestedLeads, setSuggestedLeads] = useState([]);
-const [showSuggestions, setShowSuggestions] = useState(false);
-// Client duplicate
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [clientExists, setClientExists] = useState(false);
   const [existingClient, setExistingClient] = useState(null);
+
   const autofillFromLead = (lead) => {
-  setFormData((prev) => ({
-    ...prev,
+    setFormData((prev) => ({
+      ...prev,
+      firstName: lead.firstName || "",
+      lastName: lead.lastName || "",
+      email: lead.email || "",
+      phone: lead.phone || "",
+      dob: lead.dob || "",
+      passport: lead.passport || "",
+      nationality: lead.nationality || "",
+      civilStatus: lead.civilStatus || "",
+      currentLocation: lead.currentLocation || "",
+      address: lead.address || "",
+      policeStation: lead.policeStation || "",
+      district: lead.district || "",
+      emergencyContact: lead.emergencyContact || "",
+      emergencyPhone: lead.emergencyPhone || "",
+      prefService: lead.prefService || "",
+      firstServicePref: lead.firstServicePref || "",
+      secondServicePref: lead.secondServicePref || "",
+      campaignCode: lead.campaignCode || "",
+      responsibleType: lead.responsibleType || "",
+      responsible: lead.responsible || "",
+      stage: "In Progress",
+    }));
 
-    // Basic info
-    firstName: lead.firstName || "",
-    lastName: lead.lastName || "",
-    email: lead.email || "",
-    phone: lead.phone || "",
-
-    // Personal
-    dob: lead.dob || "",
-    passport: lead.passport || "",
-    nationality: lead.nationality || "",
-    civilStatus: lead.civilStatus || "",
-
-    // Address
-    currentLocation: lead.currentLocation || "",
-    address: lead.address || "",
-    policeStation: lead.policeStation || "",
-    district: lead.district || "",
-
-    // Emergency
-    emergencyContact: lead.emergencyContact || "",
-    emergencyPhone: lead.emergencyPhone || "",
-
-    // Service preference
-    prefService: lead.prefService || "",
-    firstServicePref: lead.firstServicePref || "",
-    secondServicePref: lead.secondServicePref || "",
-
-    // Campaign / assignment
-    campaignCode: lead.campaignCode || "",
-    responsibleType: lead.responsibleType || "",
-    responsible: lead.responsible || "",
-
-    // Stage auto logic
-    stage: "In Progress",
-  }));
-
-  setShowSuggestions(false);
-};
-
-
-
-
-
+    setShowSuggestions(false);
+  };
 
   const inputBase =
-    "w-full p-3 rounded-xl border-[3px] border-slate-800 bg-white shadow-[6px_6px_0_0_#1e293b] focus:outline-none focus:ring-4 focus:ring-indigo-300";
+    "w-full p-2 sm:p-2.5 md:p-3 rounded-lg sm:rounded-xl border-2 sm:border-[3px] border-slate-800 bg-white shadow-[4px_4px_0_0_#1e293b] sm:shadow-[6px_6px_0_0_#1e293b] focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-indigo-300 text-sm sm:text-base";
 
   const selectBase = inputBase;
 
   const handleChange = async (e) => {
-  const { name, value } = e.target;
-console.log("Searching lead:", name, value);
+    const { name, value } = e.target;
+    console.log("Searching lead:", name, value);
 
-  setFormData({ ...formData, [name]: value });
-   // ---------- CLIENT DUPLICATE CHECK ----------
+    setFormData({ ...formData, [name]: value });
+
     if (name === "email" && value.length >= 5) {
       try {
-         const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:3000/api/v1/client/check?email=${value}`,
+          `https://crm-backend-ig92.onrender.com/api/v1/client/check?email=${value}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
           }
@@ -125,41 +106,40 @@ console.log("Searching lead:", name, value);
       }
     }
 
-  if ((name === "email" || name === "phone") && value.length >= 3) {
-    try {
-      const token = localStorage.getItem("token");
+    if ((name === "email" || name === "phone") && value.length >= 3) {
+      try {
+        const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/lead/similar?${name}=${value}`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        const res = await axios.get(
+          `https://crm-backend-ig92.onrender.com/api/v1/lead/similar?${name}=${value}`,
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          }
+        );
+        // console.log("Leads found:", res.data);
+
+        if (res.data.length > 0) {
+          setSuggestedLeads(res.data);
+          setShowSuggestions(true);
+        } else {
+          setShowSuggestions(false);
         }
-      );
-console.log("Leads found:", res.data);
-
-      if (res.data.length > 0) {
-        setSuggestedLeads(res.data);
-        setShowSuggestions(true);
-      } else {
-        setShowSuggestions(false);
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
     }
-  }
-};
+  };
 
-  
   const handleClick = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  //  console.log(formData,"errror")
+
     try {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "http://localhost:3000/api/v1/client/createClient",
+        "https://crm-backend-ig92.onrender.com/api/v1/client/createClient",
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -167,7 +147,6 @@ console.log("Leads found:", res.data);
         }
       );
 
-      // console.log("Client added:", res.data);
       setFormData(initialState);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
@@ -181,29 +160,39 @@ console.log("Leads found:", res.data);
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="p-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 border-[3px] border-slate-800 rounded-2xl bg-[#fefaf5]"
+      className="p-4 sm:p-6 md:p-8 lg:p-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 border-2 sm:border-[3px] border-slate-800 rounded-xl sm:rounded-2xl bg-[#fefaf5]"
     >
-      <div className="col-span-2 flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-extrabold text-slate-900">New Client</h2>
+      <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-2 sm:mb-3 md:mb-4">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900">
+          New Client
+        </h2>
         <motion.button
           whileTap={{ scale: 0.92 }}
-          className="px-6 py-2 text-slate-900 bg-white border-[3px] border-slate-800 rounded-xl"
+          className="px-4 py-2 sm:px-5 sm:py-2 md:px-6 text-sm sm:text-base text-slate-900 bg-white border-2 sm:border-[3px] border-slate-800 rounded-lg sm:rounded-xl"
         >
           <Link to="/dashboard/sales/clients">Cancel</Link>
         </motion.button>
       </div>
 
-      {error && <div className="col-span-2 text-red-600">{error}</div>}
+      {error && (
+        <div className="col-span-1 md:col-span-2 text-red-600 text-sm sm:text-base">
+          {error}
+        </div>
+      )}
 
-      {/* ------------------ ACCOUNT (STATIC) ------------------ */}
+      {/* ACCOUNT (STATIC) */}
       <div>
-        <label className="block mb-1 font-bold">Account</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Account
+        </label>
         <input disabled className={inputBase} value="Atlas Study" />
       </div>
 
-      {/* ------------------ ENTITY DROPDOWN ------------------ */}
+      {/* ENTITY DROPDOWN */}
       <div>
-        <label className="block mb-1 font-bold">Entity</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Entity
+        </label>
         <select
           name="entity"
           value={formData.entity}
@@ -220,7 +209,9 @@ console.log("Leads found:", res.data);
 
       {/* NAME FIELDS */}
       <div>
-        <label className="block mb-1 font-bold">First Name,Middle Name</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          First Name, Middle Name
+        </label>
         <input
           name="firstName"
           value={formData.firstName}
@@ -229,7 +220,9 @@ console.log("Leads found:", res.data);
         />
       </div>
       <div>
-        <label className="block mb-1 font-bold">Last Name</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Last Name
+        </label>
         <input
           name="lastName"
           value={formData.lastName}
@@ -240,7 +233,9 @@ console.log("Leads found:", res.data);
 
       {/* DOB */}
       <div>
-        <label className="block mb-1 font-bold">Date of Birth</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Date of Birth
+        </label>
         <input
           type="date"
           name="dob"
@@ -252,7 +247,9 @@ console.log("Leads found:", res.data);
 
       {/* PASSPORT */}
       <div>
-        <label className="block mb-1 font-bold">Passport Number</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Passport Number
+        </label>
         <input
           name="passport"
           value={formData.passport}
@@ -263,7 +260,9 @@ console.log("Leads found:", res.data);
 
       {/* Nationality */}
       <div>
-        <label className="block mb-1 font-bold">Nationality</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Nationality
+        </label>
         <select
           name="nationality"
           value={formData.nationality}
@@ -306,7 +305,9 @@ console.log("Leads found:", res.data);
 
       {/* CIVIL STATUS */}
       <div>
-        <label className="block mb-1 font-bold">Civil Status</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Civil Status
+        </label>
         <select
           name="civilStatus"
           value={formData.civilStatus}
@@ -321,9 +322,11 @@ console.log("Leads found:", res.data);
         </select>
       </div>
 
-      {/* CONTACT */}
-     <div className="relative mb-4">
-        <label className="font-bold">Email</label>
+      {/* EMAIL WITH SUGGESTIONS */}
+      <div className="relative">
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Email
+        </label>
         <input
           name="email"
           value={formData.email}
@@ -333,9 +336,9 @@ console.log("Leads found:", res.data);
 
         {/* CLIENT EXISTS WARNING */}
         {clientExists && (
-          <div className="mt-2 p-3 bg-red-100 border border-red-400 rounded-xl text-sm">
+          <div className="mt-2 p-2 sm:p-3 bg-red-100 border border-red-400 rounded-lg sm:rounded-xl text-xs sm:text-sm">
             ❌ <b>Client already exists</b>
-            <div>
+            <div className="mt-1">
               {existingClient?.firstName} {existingClient?.lastName} —{" "}
               {existingClient?.email}
             </div>
@@ -344,17 +347,17 @@ console.log("Leads found:", res.data);
 
         {/* LEAD SUGGESTIONS */}
         {showSuggestions && !clientExists && (
-          <div className="absolute w-full bg-white border rounded-xl shadow-lg mt-1 z-50">
+          <div className="absolute w-full bg-white border rounded-lg sm:rounded-xl shadow-lg mt-1 z-50 max-h-60 overflow-y-auto">
             {suggestedLeads.map((lead) => (
               <div
                 key={lead._id}
                 onClick={() => autofillFromLead(lead)}
-                className="p-3 hover:bg-indigo-50 cursor-pointer"
+                className="p-2 sm:p-3 hover:bg-indigo-50 cursor-pointer border-b last:border-b-0"
               >
-                <p className="font-bold">
+                <p className="font-bold text-sm sm:text-base">
                   {lead.firstName} {lead.lastName}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-[10px] sm:text-xs text-gray-500">
                   {lead.email} • {lead.phone}
                 </p>
               </div>
@@ -363,9 +366,10 @@ console.log("Leads found:", res.data);
         )}
       </div>
 
-
       <div>
-        <label className="block mb-1 font-bold">Phone Number</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Phone Number
+        </label>
         <input
           name="phone"
           value={formData.phone}
@@ -376,7 +380,9 @@ console.log("Leads found:", res.data);
 
       {/* EMERGENCY CONTACT */}
       <div>
-        <label className="block mb-1 font-bold">Emergency Contact Name</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Emergency Contact Name
+        </label>
         <input
           name="emergencyContact"
           value={formData.emergencyContact}
@@ -385,7 +391,9 @@ console.log("Leads found:", res.data);
         />
       </div>
       <div>
-        <label className="block mb-1 font-bold">Emergency Phone</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Emergency Phone
+        </label>
         <input
           name="emergencyPhone"
           value={formData.emergencyPhone}
@@ -396,7 +404,9 @@ console.log("Leads found:", res.data);
 
       {/* LOCATION FIELDS */}
       <div>
-        <label className="block mb-1 font-bold">Current Location</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Current Location
+        </label>
         <select
           name="currentLocation"
           value={formData.currentLocation}
@@ -415,7 +425,9 @@ console.log("Leads found:", res.data);
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">Address</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Address
+        </label>
         <input
           name="address"
           value={formData.address}
@@ -425,7 +437,9 @@ console.log("Leads found:", res.data);
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">Police Station</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Police Station
+        </label>
         <input
           name="policeStation"
           value={formData.policeStation}
@@ -435,7 +449,9 @@ console.log("Leads found:", res.data);
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">District</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          District
+        </label>
         <input
           name="district"
           value={formData.district}
@@ -446,7 +462,9 @@ console.log("Leads found:", res.data);
 
       {/* RESPONSIBLE TYPE */}
       <div>
-        <label className="block mb-1 font-bold">Responsible Type</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Responsible Type
+        </label>
         <select
           name="responsibleType"
           value={formData.responsibleType}
@@ -462,7 +480,9 @@ console.log("Leads found:", res.data);
 
       {/* FIRST PREFERENCE SERVICE */}
       <div>
-        <label className="block mb-1 font-bold">First Preference Service</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          First Preference Service
+        </label>
         <select
           name="prefService"
           value={formData.prefService}
@@ -478,7 +498,9 @@ console.log("Leads found:", res.data);
 
       {/* STAGE */}
       <div>
-        <label className="block mb-1 font-bold">Stage</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Stage
+        </label>
         <select
           name="stage"
           value={formData.stage}
@@ -494,7 +516,9 @@ console.log("Leads found:", res.data);
 
       {/* CLIENT TYPE */}
       <div>
-        <label className="block mb-1 font-bold">Type</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Type
+        </label>
         <select
           name="type"
           value={formData.type}
@@ -509,7 +533,9 @@ console.log("Leads found:", res.data);
 
       {/* RESPONSIBLE */}
       <div>
-        <label className="block mb-1 font-bold">Responsible</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Responsible
+        </label>
         <select
           name="responsible"
           value={formData.responsible}
@@ -524,7 +550,9 @@ console.log("Leads found:", res.data);
 
       {/* REF TYPE */}
       <div>
-        <label className="block mb-1 font-bold">Referral Type</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Referral Type
+        </label>
         <select
           name="refType"
           value={formData.refType}
@@ -539,7 +567,9 @@ console.log("Leads found:", res.data);
 
       {/* REFERRED BY */}
       <div>
-        <label className="block mb-1 font-bold">Referred By</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Referred By
+        </label>
         <input
           name="referredBy"
           value={formData.referredBy}
@@ -550,7 +580,9 @@ console.log("Leads found:", res.data);
 
       {/* NEXT ACTION */}
       <div>
-        <label className="block mb-1 font-bold">Next Action</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Next Action
+        </label>
         <select
           name="nextAction"
           value={formData.nextAction}
@@ -564,7 +596,9 @@ console.log("Leads found:", res.data);
       </div>
 
       <div>
-        <label className="block mb-1 font-bold">Next Action Date</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Next Action Date
+        </label>
         <input
           type="date"
           name="nextActionDate"
@@ -576,7 +610,9 @@ console.log("Leads found:", res.data);
 
       {/* AGENT PROMO */}
       <div>
-        <label className="block mb-1 font-bold">Agent Promotion</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Agent Promotion
+        </label>
         <select
           name="agentPromo"
           value={formData.agentPromo}
@@ -591,7 +627,9 @@ console.log("Leads found:", res.data);
 
       {/* ACTIVE STATUS */}
       <div>
-        <label className="block mb-1 font-bold">Is Active?</label>
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Is Active?
+        </label>
         <select
           name="active"
           value={formData.active}
@@ -605,8 +643,10 @@ console.log("Leads found:", res.data);
       </div>
 
       {/* DESCRIPTION */}
-      <div className="col-span-2">
-        <label className="block mb-1 font-bold">Description</label>
+      <div className="col-span-1 md:col-span-2">
+        <label className="block mb-1 font-bold text-sm sm:text-base">
+          Description
+        </label>
         <textarea
           name="description"
           rows={3}
@@ -617,22 +657,22 @@ console.log("Leads found:", res.data);
       </div>
 
       {/* BUTTON */}
-      <div className="col-span-2 flex justify-end">
+      <div className="col-span-1 md:col-span-2 flex justify-end">
         <motion.button
           whileTap={{ scale: 0.94 }}
           onClick={handleClick}
           disabled={loading}
-          className="px-6 py-3 font-extrabold text-white bg-indigo-600 rounded-xl border-[3px] border-indigo-900"
+          className="px-5 py-2.5 sm:px-6 sm:py-3 font-bold sm:font-extrabold text-sm sm:text-base text-white bg-indigo-600 rounded-lg sm:rounded-xl border-2 sm:border-[3px] border-indigo-900"
         >
           {loading ? "Adding..." : "Add Client"}
         </motion.button>
       </div>
-      {showSuggestions && (
-  <p className="text-sm text-orange-600 mt-1">
-    Similar lead found — click to autofill
-  </p>
-)}
 
+      {showSuggestions && (
+        <p className="col-span-1 md:col-span-2 text-xs sm:text-sm text-orange-600 mt-1">
+          Similar lead found — click to autofill
+        </p>
+      )}
     </motion.div>
   );
 }

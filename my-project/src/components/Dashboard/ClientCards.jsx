@@ -46,7 +46,7 @@ const ClientCards = () => {
             withCredentials: true,
           }
         );
-         console.log(res.data,"4999")
+        //  console.log(res.data,"4999")
         setTodaysClients(res.data.todaysClients || []);
         setRecentClients(res.data.recentClients || []);
       } catch (err) {

@@ -2,8 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-export default function DeleteLeadModal({
-  leadName = "this lead",
+export default function DeleteExternalClient({
+  clientName = "this External Client",
   confirmText = "delete",
   inputValue,
   setInputValue,
@@ -17,7 +17,7 @@ export default function DeleteLeadModal({
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `https://crm-backend-ig92.onrender.com/api/v1/lead/deleteLead/${deleteID}`,
+        `https://crm-backend-ig92.onrender.com/api/v1/externalClient/deleteExternalClient/${deleteID}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
@@ -27,7 +27,7 @@ export default function DeleteLeadModal({
       setInputValue("");
       onCancel();
     } catch (error) {
-      console.error("Delete failed:", error);
+      console.error("Delete external client failed:", error);
     }
   };
 
@@ -48,13 +48,13 @@ export default function DeleteLeadModal({
       >
         {/* Header */}
         <h2 className="text-2xl font-extrabold text-slate-900 text-center">
-          Delete Lead
+          Delete External Client
         </h2>
 
         {/* Description */}
         <p className="text-slate-700 font-medium text-lg mt-4 text-center">
           Only admins can delete{" "}
-          <span className="font-bold">{leadName}</span>.
+          <span className="font-bold">{clientName}</span>.
           <br />
           Type{" "}
           <span className="text-red-600 font-extrabold">

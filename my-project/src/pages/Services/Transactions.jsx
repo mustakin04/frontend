@@ -12,14 +12,14 @@ const Transactions = () => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "http://localhost:3000/api/v1/transaction/getTransactions",
+          "https://crm-backend-ig92.onrender.com/api/v1/transaction/getTransactions",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
           }
         );
 
-        console.log(res.data, "API Response");
+        // console.log(res.data, "API Response");
 
         // FIXED
         setTransactions(res.data.data);
