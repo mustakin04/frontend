@@ -52,7 +52,7 @@ const EditTransactionModal = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/client/getClient",
+          "https://crm-api.iatlasstudy.com/api/v1/client/getClient",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -91,7 +91,7 @@ const EditTransactionModal = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `https://crm-backend-ig92.onrender.com/api/v1/transaction/updateTransaction/${id}`,
+        `https://crm-api.iatlasstudy.com/api/v1/transaction/updateTransaction/${id}`,
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},

@@ -33,7 +33,7 @@ const ClientTable = ({ clients }) => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          `https://crm-backend-ig92.onrender.com/api/v1/client/getSingleClient/${selectedID}`,
+          `https://crm-api.iatlasstudy.com/api/v1/client/getSingleClient/${selectedID}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -60,7 +60,7 @@ const ClientTable = ({ clients }) => {
       const token = localStorage.getItem("token");
 
       const res = await axios.delete(
-        `https://crm-backend-ig92.onrender.com/api/v1/client/deleted/${deletedID}`,
+        `https://crm-api.iatlasstudy.com/api/v1/client/deleted/${deletedID}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }

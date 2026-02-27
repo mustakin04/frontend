@@ -18,7 +18,7 @@ export default function DeleteApplication({
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `https://crm-backend-ig92.onrender.com/api/v1/application/deleteApplication/${deleteID}`,
+        `https://crm-api.iatlasstudy.com/api/v1/application/deleteApplication/${deleteID}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,

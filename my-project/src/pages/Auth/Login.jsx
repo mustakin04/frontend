@@ -25,7 +25,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "https://crm-backend-ig92.onrender.com/api/v1/authentication/login",
+        "https://crm-api.iatlasstudy.com/api/v1/authentication/login",
         formData
       );
 

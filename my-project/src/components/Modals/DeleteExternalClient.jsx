@@ -17,7 +17,7 @@ export default function DeleteExternalClient({
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `https://crm-backend-ig92.onrender.com/api/v1/externalClient/deleteExternalClient/${deleteID}`,
+        `https://crm-api.iatlasstudy.com/api/v1/externalClient/deleteExternalClient/${deleteID}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,

@@ -54,7 +54,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/authentication/me",
+          "https://crm-api.iatlasstudy.com/api/v1/authentication/me",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -100,7 +100,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
       };
 
       const res = await axios.post(
-        "https://crm-backend-ig92.onrender.com/api/v1/lead/createLead",
+        "https://crm-api.iatlasstudy.com/api/v1/lead/createLead",
         payload,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},

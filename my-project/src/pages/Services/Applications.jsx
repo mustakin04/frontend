@@ -14,7 +14,7 @@ const Applications = () => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/application/getapplications",
+          "https://crm-api.iatlasstudy.com/api/v1/application/getapplications",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,

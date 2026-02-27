@@ -24,7 +24,7 @@ const DashboardPage = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/lead/getLeadCount",
+          "https://crm-api.iatlasstudy.com/api/v1/lead/getLeadCount",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -44,7 +44,7 @@ const DashboardPage = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/client/getClientCount",
+          "https://crm-api.iatlasstudy.com/api/v1/client/getClientCount",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -65,7 +65,7 @@ const DashboardPage = () => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/externalClient/getExternalClients",
+          "https://crm-api.iatlasstudy.com/api/v1/externalClient/getExternalClients",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -87,7 +87,7 @@ const DashboardPage = () => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/transaction/getTransactions",
+          "https://crm-api.iatlasstudy.com/api/v1/transaction/getTransactions",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
@@ -112,7 +112,7 @@ const DashboardPage = () => {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/application/getapplications",
+          "https://crm-api.iatlasstudy.com/api/v1/application/getapplications",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,

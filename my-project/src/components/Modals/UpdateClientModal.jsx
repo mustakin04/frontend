@@ -59,7 +59,7 @@ export default function UpdateClientModal() {
       const token = localStorage.getItem("token");
 
       const res = await axios.put(
-        `https://crm-backend-ig92.onrender.com/api/v1/client/updateClient/${id}`,
+        `https://crm-api.iatlasstudy.com/api/v1/client/updateClient/${id}`,
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},

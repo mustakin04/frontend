@@ -13,7 +13,7 @@ import {
   YAxis,
 } from "recharts";
 
-// Date formatter
+// Date formatter o
 const formatDate = (dateString) => {
   if (!dateString) return "-";
   const d = new Date(dateString);
@@ -40,7 +40,7 @@ const ClientCards = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "https://crm-backend-ig92.onrender.com/api/v1/client/getDashboardData",
+          "https://crm-api.iatlasstudy.com/api/v1/client/getDashboardData",
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,

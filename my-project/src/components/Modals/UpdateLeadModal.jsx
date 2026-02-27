@@ -57,7 +57,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.put(
-      `https://crm-backend-ig92.onrender.com/api/v1/lead/updateLead/${id}`,
+      `https://crm-api.iatlasstudy.com/api/v1/lead/updateLead/${id}`,
       formData,
       {
         headers: token ? { Authorization: `Bearer ${token}` } : {},

@@ -25,6 +25,7 @@ import UpdateClientModal from './components/Modals/UpdateClientModal';
 import EditTransactionModal from "./components/Modals/EditTransactionModal";
 import UpdateApplicationModal from "./components/Modals/UpdateApplicationModal";
 import UpdateExternalClientModal from "./components/Modals/UpdateExternalClientModal";
+import AddCSVUpload from "./components/Modals/AddCSVUpload";
 
 function App() {
   const router = createBrowserRouter([
@@ -48,6 +49,7 @@ function App() {
 
         // Sales
         { path: "/dashboard/sales/leads", element: <Leads /> },
+        { path: "/dashboard/sales/leadsUplodad", element: <AddCSVUpload /> },
         { path: "/dashboard/sales/clients", element: <Clients /> },
         { path: "/dashboard/sales/clients/addClient", element: <AddClientModal /> },
         {path:"sales/clients/updateClient/:id",element:<UpdateClientModal></UpdateClientModal>},

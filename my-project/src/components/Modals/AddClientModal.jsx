@@ -86,7 +86,7 @@ export default function AddClientModal() {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://crm-backend-ig92.onrender.com/api/v1/client/check?email=${value}`,
+          `https://crm-api.iatlasstudy.com/api/v1/client/check?email=${value}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
           }
@@ -111,7 +111,7 @@ export default function AddClientModal() {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          `https://crm-backend-ig92.onrender.com/api/v1/lead/similar?${name}=${value}`,
+          `https://crm-api.iatlasstudy.com/api/v1/lead/similar?${name}=${value}`,
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
           }
@@ -139,7 +139,7 @@ export default function AddClientModal() {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "https://crm-backend-ig92.onrender.com/api/v1/client/createClient",
+        "https://crm-api.iatlasstudy.com/api/v1/client/createClient",
         formData,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},

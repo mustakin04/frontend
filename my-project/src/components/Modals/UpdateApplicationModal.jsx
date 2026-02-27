@@ -57,7 +57,7 @@ export default function UpdateApplicationModal() {
         const token = localStorage.getItem("token");
 
         const res = await axios.get(
-          `https://crm-backend-ig92.onrender.com/api/v1/application/getapplication/${id}`,
+          `https://crm-api.iatlasstudy.com/api/v1/application/getapplication/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -81,7 +81,7 @@ export default function UpdateApplicationModal() {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `https://crm-backend-ig92.onrender.com/api/v1/application/updateApplicaiton/${id}`,
+        `https://crm-api.iatlasstudy.com/api/v1/application/updateApplicaiton/${id}`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -101,7 +101,7 @@ export default function UpdateApplicationModal() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "https://crm-backend-ig92.onrender.com/api/v1/transaction/getTransactions",
+        "https://crm-api.iatlasstudy.com/api/v1/transaction/getTransactions",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -119,7 +119,7 @@ export default function UpdateApplicationModal() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "https://crm-backend-ig92.onrender.com/api/v1/client/getClient",
+        "https://crm-api.iatlasstudy.com/api/v1/client/getClient",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
