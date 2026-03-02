@@ -107,7 +107,7 @@ const LeadTable = ({ leads }) => {
   };
 
   return (
-    <div className="relative w-full overflow-x-auto bg-white shadow rounded-xl">
+    <div className="relative w-full bg-white shadow rounded-xl h-f overflow-auto">
       <table className="min-w-full lg:min-w-[1600px] divide-y divide-gray-200 text-sm">
         <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>

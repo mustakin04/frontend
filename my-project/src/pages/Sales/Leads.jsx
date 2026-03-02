@@ -77,7 +77,7 @@ const Leads = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="h-[840px] flex flex-col space-y-4 overflow-hidden">
       {/* ✅ FILTER BAR */}
       <FilterBar
         filters={filters}
