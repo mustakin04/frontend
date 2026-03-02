@@ -49,7 +49,7 @@ const Leads = () => {
         },
       );
 
-      setLeads(res.data.leads || []);
+      setLeads(res.data.leads.reverse() || []);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -118,7 +118,7 @@ const Leads = () => {
       <AddLeadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onAddLead={(lead) => setLeads((p) => [lead, ...p])}
+        onAddLead={(lead) => setLeads((p) => [ ...p , lead])}
       />
     </div>
   );

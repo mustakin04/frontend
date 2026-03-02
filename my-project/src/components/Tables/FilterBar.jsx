@@ -1,8 +1,24 @@
+import axios from "axios";
 import { Search, Calendar, RefreshCw, Filter } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const FilterBar = ({ filters, setFilters, onApply, onReset }) => {
   const update = (k, v) => setFilters((p) => ({ ...p, [k]: v }));
-
+  const [stageOptions, setStageOptions] = useState([]);
+     useEffect(()=>{
+        const fetchStageOptions=async()=>{
+          try {
+            const token=localStorage.getItem("token");
+            const res=await axios.get("http://localhost:3000/api/v1/lead/stage", 
+              { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+              setStageOptions(res.data.stages); // ধরে নিই res.data = ["New","In Progress","Closed"]
+              console.log(res.data.stages,"15fgdfgdfg")
+    } catch (err) {
+      console.error("Failed to fetch stage options:", err);
+          }
+        }
+        fetchStageOptions();
+     },[])
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       {/* Header */}
@@ -49,20 +65,22 @@ const FilterBar = ({ filters, setFilters, onApply, onReset }) => {
 
         {/* Stage Select */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">
-            Stage
-          </label>
-          <select
-            value={filters.stage}
-            onChange={(e) => update("stage", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
-          >
-            <option value="">All Stages</option>
-            <option value="New">New</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Closed">Closed</option>
-          </select>
-        </div>
+  <label className="block text-xs font-medium text-gray-700 mb-1.5">
+    Stage
+  </label>
+  <select
+    value={filters.stage}
+    onChange={(e) => update("stage", e.target.value)}
+    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+  >
+    <option value="">All Stages</option>
+    {stageOptions.map((stage) => (
+      <option key={stage} value={stage}>
+        {stage}
+      </option>
+    ))}
+  </select>
+</div>
 
         {/* Next Action Type */}
         <div>

@@ -97,6 +97,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
         nextActionDate: formData.nextActionDate
           ? new Date(formData.nextActionDate)
           : null,
+          stage: formData.stageCustom ? formData.stageCustom : formData.stage,
       };
 
       const res = await axios.post(
@@ -461,22 +462,32 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
         </div>
 
         {/* Stage */}
-        <div>
-          <label className="block mb-1 font-bold text-sm sm:text-base">
-            Stage
-          </label>
-          <select
-            name="stage"
-            value={formData.stage}
-            onChange={handleChange}
-            className={selectBase}
-          >
-            <option value="">Select Stage</option>
-            <option>New</option>
-            <option>In Progress</option>
-            <option>Closed</option>
-          </select>
-        </div>
+        {/* Stage: Select + Input */}
+<div>
+  <label className="font-bold text-sm">Stage</label>
+  <div className="flex gap-2">
+    <select
+      name="stage"
+      value={formData.stage}
+      onChange={handleChange}
+      className={selectBase + " flex-1"}
+    >
+      <option value="">Select Stage</option>
+      <option>New</option>
+      <option>In Progress</option>
+      <option>Closed</option>
+    </select>
+
+    <input
+      type="text"
+      name="stageCustom"
+      placeholder="Or type stage"
+      value={formData.stageCustom || ""}
+      onChange={handleChange}
+      className={inputBase + " flex-1"}
+    />
+  </div>
+</div>
 
         {/* Type */}
         <div>
@@ -556,6 +567,8 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
             <option value="">Select Next Action</option>
             <option>Call</option>
             <option>Mail</option>
+            <option>Meeting</option>
+            <option>Follow-up</option>
           </select>
         </div>
 
