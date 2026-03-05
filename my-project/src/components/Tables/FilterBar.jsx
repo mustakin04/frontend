@@ -9,7 +9,7 @@ const FilterBar = ({ filters, setFilters, onApply, onReset }) => {
         const fetchStageOptions=async()=>{
           try {
             const token=localStorage.getItem("token");
-            const res=await axios.get("http://localhost:3000/api/v1/lead/stage", 
+            const res=await axios.get("https://crm-api.iatlasstudy.com/api/v1/lead/stage", 
               { headers: token ? { Authorization: `Bearer ${token}` } : {} })
               setStageOptions(res.data.stages); // ধরে নিই res.data = ["New","In Progress","Closed"]
               console.log(res.data.stages,"15fgdfgdfg")
