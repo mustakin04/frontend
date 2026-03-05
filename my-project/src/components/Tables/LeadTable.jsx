@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
 import clsx from "clsx";
 import axios from "axios";
@@ -6,46 +6,93 @@ import ViewLeadModal from "../Modals/ViewLeadModal";
 import UpdateLeadModal from "../Modals/UpdateLeadModal";
 import DeleteLeadModal from "../Modals/DeleteLeadModal";
 
+// ✅ Custom Tooltip Component
+const Tooltip = ({ text }) => {
+  const [visible, setVisible] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+
+  const handleMouseEnter = (e) => {
+    setVisible(true);
+    setPos({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseMove = (e) => {
+    setPos({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseLeave = () => {
+    setVisible(false);
+  };
+
+  if (!text) return <span className="text-gray-400">—</span>;
+
+  return (
+    <>
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="w-[140px] truncate text-gray-700 cursor-default"
+      >
+        {text}
+      </div>
+
+      {visible && (
+        <div
+          style={{
+            position: "fixed",
+            top: pos.y + 14,
+            left: pos.x + 12,
+            zIndex: 9999,
+            pointerEvents: "none",
+          }}
+          className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl max-w-[280px] break-words leading-relaxed"
+        >
+          {text}
+        </div>
+      )}
+    </>
+  );
+};
+
 const LeadTable = ({ leads }) => {
   const headers = [
-  "#",
-  "Actions",
-  "First Name",
-  "Last Name",
-  "Phone",
-  "Stage",
-  "Next Action",
-  "Email",
-  "Address",
+    "#",
+    "Actions",
+    "First Name",
+    "Last Name",
+    "Phone",
+    "Stage",
+    "Next Action",
+    "Email",
+    "Description",
+    "Address",
+    "Account",
+    "Entity",
+    "DOB",
+    "Passport",
+    "Nationality",
+    "Civil Status",
+    "Emergency Contact",
+    "Emergency Phone",
+    "Current Location",
+    "Police Station",
+    "District",
+    "Responsible Type",
+    "Pref Service",
+    "First Service Pref",
+    "Second Service Pref",
+    "Campaign Code",
+    "Type",
+    "Responsible",
+    "Referral Type",
+    "Referred By",
+    "Next Action Date",
+    "Agent Promo",
+    "Active",
+    "Lead Owner",
+  ];
 
-  // remaining fields
-  "Account",
-  "Entity",
-  "DOB",
-  "Passport",
-  "Nationality",
-  "Civil Status",
-  "Emergency Contact",
-  "Emergency Phone",
-  "Current Location",
-  "Police Station",
-  "District",
-  "Responsible Type",
-  "Pref Service",
-  "First Service Pref",
-  "Second Service Pref",
-  "Campaign Code",
-  "Type",
-  "Responsible",
-  "Referral Type",
-  "Referred By",
-  "Next Action Date",
-  "Agent Promo",
-  "Active",
-  "Description",
-
-  "Lead Owner",
-];
   const [showEye, setShowEye] = useState(false);
   const [eyeID, setEyeID] = useState(null);
   const [eyeData, setEyeData] = useState(null);
@@ -68,11 +115,9 @@ const LeadTable = ({ leads }) => {
 
   useEffect(() => {
     if (!eyeID) return;
-
     const fetchSingleClient = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const res = await axios.get(
           `https://crm-api.iatlasstudy.com/api/v1/lead/getSingleLead/${eyeID}`,
           {
@@ -85,7 +130,6 @@ const LeadTable = ({ leads }) => {
         console.log("Error loading single client:", err);
       }
     };
-
     fetchSingleClient();
   }, [eyeID]);
 
@@ -99,9 +143,7 @@ const LeadTable = ({ leads }) => {
     seteditID(id);
   };
 
-  const closeDeleted = () => {
-    setDeleteShow(false);
-  };
+  const closeDeleted = () => setDeleteShow(false);
 
   const handleDeleted = (id) => {
     setDeleteShow(true);
@@ -128,105 +170,67 @@ const LeadTable = ({ leads }) => {
           {leads && leads.length > 0 ? (
             leads.map((lead, idx) => (
               <tr
-  key={lead.id || idx}
-  className={clsx(idx % 2 === 0 ? "bg-white" : "bg-gray-50")}
->
-  {/* Index */}
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {idx + 1}
-  </td>
+                key={lead.id || idx}
+                className={clsx(idx % 2 === 0 ? "bg-white" : "bg-gray-50")}
+              >
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{idx + 1}</td>
 
-  {/* Actions */}
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap">
-    <div className="flex gap-1 sm:gap-2">
-      <button
-        className="text-green-500 hover:text-green-700 p-1"
-        onClick={() => handleEye(lead._id)}
-      >
-        <FiEye size={16} className="sm:w-4 sm:h-4" />
-      </button>
-      <button
-        className="text-blue-500 hover:text-blue-700 p-1"
-        onClick={() => handleEdit(lead._id)}
-      >
-        <FiEdit2 size={16} className="sm:w-4 sm:h-4" />
-      </button>
-      <button
-        className="text-red-500 hover:text-red-700 p-1"
-        onClick={() => handleDeleted(lead._id)}
-      >
-        <FiTrash2 size={16} className="sm:w-4 sm:h-4" />
-      </button>
-    </div>
-  </td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap">
+                  <div className="flex gap-1 sm:gap-2">
+                    <button className="text-green-500 hover:text-green-700 p-1" onClick={() => handleEye(lead._id)}>
+                      <FiEye size={16} />
+                    </button>
+                    <button className="text-blue-500 hover:text-blue-700 p-1" onClick={() => handleEdit(lead._id)}>
+                      <FiEdit2 size={16} />
+                    </button>
+                    <button className="text-red-500 hover:text-red-700 p-1" onClick={() => handleDeleted(lead._id)}>
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
+                </td>
 
-  {/* Priority fields */}
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.firstName}
-  </td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.firstName}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.lastName}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.phone}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.stage}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.nextAction}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.email}</td>
 
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.lastName}
-  </td>
+                {/* ✅ Description — Custom Tooltip on Hover */}
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 text-xs sm:text-sm">
+                  <Tooltip text={lead.description} />
+                </td>
 
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.phone}
-  </td>
-
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.stage}
-  </td>
-
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.nextAction}
-  </td>
-
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.email}
-  </td>
-
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.address}
-  </td>
-
-  {/* Remaining fields */}
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.account}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.entity}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.dob}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.passport}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.nationality}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.civilStatus}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.emergencyContact}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.emergencyPhone}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.currentLocation}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.policeStation}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.district}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.responsibleType}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.prefService}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.firstServicePref}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.secondServicePref}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.campaignCode}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.type}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.responsible}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.refType}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.referredBy}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.nextActionDate}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.agentPromo}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.active}</td>
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.description}</td>
-
-  {/* LAST */}
-  <td className="px-2 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-    {lead.leadOwner}
-  </td>
-</tr>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.address}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.account}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.entity}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.dob}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.passport}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.nationality}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.civilStatus}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.emergencyContact}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.emergencyPhone}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.currentLocation}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.policeStation}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.district}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.responsibleType}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.prefService}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.firstServicePref}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.secondServicePref}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.campaignCode}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.type}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.responsible}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.refType}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.referredBy}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.nextActionDate}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.agentPromo}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.active}</td>
+                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">{lead.leadOwner}</td>
+              </tr>
             ))
           ) : (
             <tr>
-              <td
-                colSpan={headers.length}
-                className="px-6 py-6 text-center text-gray-500"
-              >
+              <td colSpan={headers.length} className="px-6 py-6 text-center text-gray-500">
                 No Leads Available
               </td>
             </tr>
@@ -243,11 +247,7 @@ const LeadTable = ({ leads }) => {
       )}
 
       {showEdit && (
-        <UpdateLeadModal
-          isOpen={showEdit}
-          onClose={closeEditModal}
-          id={editId}
-        />
+        <UpdateLeadModal isOpen={showEdit} onClose={closeEditModal} id={editId} />
       )}
 
       {deleteShow && (

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
+const UpdateLeadModal = ({ isOpen, onClose, id }) => {
   if (!isOpen) return null;
 
   const inputBase =
@@ -10,7 +10,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
   const selectBase = inputBase;
 
   // 🔹 State for entire form
-  const [formData, setFormData] = useState ({
+  const [formData, setFormData] = useState({
     leadOwner: "Admin",
     account: "Atlas Study",
     entity: "",
@@ -45,6 +45,38 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
     description: "",
   });
 
+  // ✅ LOAD EXISTING LEAD DATA (from code-2)
+  useEffect(() => {
+    const fetchLead = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.get(
+          `https://crm-api.iatlasstudy.com/api/v1/lead/getSingleLead/${id}`,
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            withCredentials: true,
+          }
+        );
+
+        const lead = res.data?.lead || res.data;
+
+        setFormData({
+          ...lead,
+          dob: lead.dob ? lead.dob.split("T")[0] : "",
+          nextActionDate: lead.nextActionDate
+            ? lead.nextActionDate.split("T")[0]
+            : "",
+        });
+      } catch (err) {
+        console.error("Error loading lead:", err);
+      }
+    };
+
+    if (id && isOpen) {
+      fetchLead();
+    }
+  }, [id, isOpen]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -52,26 +84,25 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
       [name]: value,
     }));
   };
-  // console.log(id,"after")
-  const handleSubmit = async () => {
-  const token = localStorage.getItem("token");
-  try {
-    const res = await axios.put(
-      `https://crm-api.iatlasstudy.com/api/v1/lead/updateLead/${id}`,
-      formData,
-      {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        withCredentials: true,
-      }
-    );
-    // console.log("Lead updated:", res.data);
-    onClose(); // Close modal after successful update
-  } catch (error) {
-    console.error("Error updating lead:", error);
-    alert("Failed to update lead. Please try again.");
-  }
-};
 
+  const handleSubmit = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.put(
+        `https://crm-api.iatlasstudy.com/api/v1/lead/updateLead/${id}`,
+        formData,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        }
+      );
+      // console.log("Lead updated:", res.data);
+      onClose();
+    } catch (error) {
+      console.error("Error updating lead:", error);
+      alert("Failed to update lead. Please try again.");
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-2 sm:p-4">
@@ -96,6 +127,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
 
         {/* FORM */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+
           {/* Lead Owner */}
           <div className="col-span-1 md:col-span-2">
             <label className="font-bold text-sm">Lead Owner</label>
@@ -359,33 +391,33 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
             />
           </div>
 
-          {/* Stage, Type, Responsible */}
           {/* Stage: Select + Input */}
-<div>
-  <label className="font-bold text-sm">Stage</label>
-  <div className="flex gap-2">
-    <select
-      name="stage"
-      value={formData.stage}
-      onChange={handleChange}
-      className={selectBase + " flex-1"}
-    >
-      <option value="">Select Stage</option>
-      <option>New</option>
-      <option>In Progress</option>
-      <option>Closed</option>
-    </select>
+          <div>
+            <label className="font-bold text-sm">Stage</label>
+            <div className="flex gap-2">
+              <select
+                name="stage"
+                value={formData.stage}
+                onChange={handleChange}
+                className={selectBase + " flex-1"}
+              >
+                <option value="">Select Stage</option>
+                <option>New</option>
+                <option>In Progress</option>
+                <option>Closed</option>
+              </select>
+              <input
+                type="text"
+                name="stage"
+                placeholder="Or type stage"
+                value={formData.stage || ""}
+                onChange={handleChange}
+                className={inputBase + " flex-1"}
+              />
+            </div>
+          </div>
 
-    <input
-      type="text"
-      name="stage"
-      placeholder="Or type stage"
-      value={formData.stage || ""}
-      onChange={handleChange}
-      className={inputBase + " flex-1"}
-    />
-  </div>
-</div>
+          {/* Type */}
           <div>
             <label className="font-bold text-sm">Type</label>
             <select
@@ -399,6 +431,8 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
               <option>Company</option>
             </select>
           </div>
+
+          {/* Responsible */}
           <div>
             <label className="font-bold text-sm">Responsible</label>
             <select
@@ -521,6 +555,7 @@ const UpdateLeadModal = ({ isOpen, onClose ,id }) => {
               Update Lead
             </button>
           </div>
+
         </div>
       </motion.div>
     </div>
