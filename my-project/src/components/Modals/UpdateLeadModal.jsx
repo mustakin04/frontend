@@ -12,6 +12,7 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
   // 🔹 State for entire form
   const [formData, setFormData] = useState({
     leadOwner: "Admin",
+    leadNumber:"",
     account: "Atlas Study",
     entity: "",
     firstName: "",
@@ -96,7 +97,7 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
           withCredentials: true,
         }
       );
-      // console.log("Lead updated:", res.data);
+      console.log("Lead updated:", res.data);
       onClose();
     } catch (error) {
       console.error("Error updating lead:", error);
@@ -129,7 +130,7 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
 
           {/* Lead Owner */}
-          <div className="col-span-1 md:col-span-2">
+          <div >
             <label className="font-bold text-sm">Lead Owner</label>
             <input
               name="leadOwner"
@@ -139,6 +140,17 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
               className={inputBase + " bg-gray-100"}
             />
           </div>
+          <div>
+          <label className="block mb-1 font-bold text-sm sm:text-base">
+            leadNumber
+          </label>
+          <input
+            name="leadNumber"
+            value={formData.leadNumber}
+            onChange={handleChange}
+            className={inputBase}
+          />
+        </div>
 
           {/* Account */}
           <div>

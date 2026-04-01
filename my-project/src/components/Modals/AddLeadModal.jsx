@@ -5,12 +5,13 @@ import { motion } from "framer-motion";
 const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
   const initialState = {
     leadOwner: "",
+    leadNumber:"",
     account: "Atlas Study",
     entity: "",
     firstName: "",
     lastName: "",
     dob: "",
-    passport: "",
+    passport: "",  
     nationality: "",
     civilStatus: "",
     email: "",
@@ -86,7 +87,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+    console.log("listnumber",formData)
     try {
       const token = localStorage.getItem("token");
 
@@ -149,7 +150,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
         )}
 
         {/* Lead Owner */}
-        <div className="col-span-1 md:col-span-2">
+        <div >
           <label className="block mb-1 font-bold text-sm sm:text-base">
             Lead Owner
           </label>
@@ -159,7 +160,17 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
             className={inputBase + " bg-gray-100"}
           />
         </div>
-
+        <div>
+          <label className="block mb-1 font-bold text-sm sm:text-base">
+            leadNumber
+          </label>
+          <input
+            name="leadNumber"
+            value={formData.leadNumber}
+            onChange={handleChange}
+            className={inputBase}
+          />
+        </div>
         {/* Account */}
         <div>
           <label className="block mb-1 font-bold text-sm sm:text-base">

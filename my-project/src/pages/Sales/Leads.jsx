@@ -11,7 +11,7 @@ const Leads = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [callStats, setCallStats] = useState([]);
   // 🔎 FILTER STATE
   const [filters, setFilters] = useState({
   search: "",
@@ -28,6 +28,25 @@ const Leads = () => {
   useEffect(() => {
     fetchLeads();
   }, []);
+
+
+const fetchCallStats = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(
+      `https://crm-api.iatlasstudy.com/api/v1/lead/call-stats?fromDate=${filters.fromDate}&toDate=${filters.toDate}`,
+      {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      }
+    );
+
+    setCallStats(res.data.data);
+    // console.log(res.data,"ok ok ok")
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   const fetchLeads = async (customFilters = filters) => {
     try {
@@ -59,6 +78,7 @@ const Leads = () => {
 
   const applyFilters = () => {
     fetchLeads(filters);
+    fetchCallStats();
   };
 
   const resetFilters = () => {
@@ -70,10 +90,11 @@ const Leads = () => {
       fromDate: "",
       toDate: "",
       nextActionType: "",
-  nextActionDate: "",
+      nextActionDate: "",
     };
     setFilters(reset);
     fetchLeads(reset);
+    setCallStats([]);
   };
 
   return (
@@ -84,7 +105,24 @@ const Leads = () => {
         setFilters={setFilters}
         onApply={applyFilters}
         onReset={resetFilters}
+        
       />
+      
+      {callStats.length > 0 && (
+  <div className="bg-purple-50 p-3 rounded-lg border mb-2">
+    <h3 className="font-bold mb-2">📞 Call রিপোর্ট</h3>
+
+    {callStats.map((item, i) => (
+      <div key={i} className="flex justify-between text-sm">
+        <span>{item._id.date}</span>
+        <span className="font-bold text-purple-600">
+          {item.totalCalls} calls
+        </span>
+      </div>
+    ))}
+  </div>
+)}
+
 
       {/* 🔘 ACTION BUTTONS */}
       <div className="flex justify-between items-center">
