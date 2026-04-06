@@ -4,6 +4,8 @@ import { FiHome, FiUsers, FiUserPlus, FiLayers, FiFileText, FiX } from "react-ic
 import logo from "../assets/Atlas.png";
 
 const Sidebar = ({ isOpen, onClose }) => {
+   const user = JSON.parse(localStorage.getItem("user"));
+   
   const linkClass =
     "flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-100 transition";
 
@@ -95,6 +97,16 @@ const Sidebar = ({ isOpen, onClose }) => {
             >
               <FiFileText /> Applications
             </NavLink>
+    {user?.role === "admin" ? (
+  <NavLink to="/dashboard/admin/attendance">
+    Admin Attendance
+  </NavLink>
+) : (
+  <NavLink to="/dashboard/attendance">
+    Attendance
+  </NavLink>
+)}
+              
           </nav>
         </div>
       </div>

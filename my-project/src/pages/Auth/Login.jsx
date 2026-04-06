@@ -32,6 +32,9 @@ const Login = () => {
       // token save
       localStorage.setItem("token", res.data.token);
 
+       // ✅ Save user data for sidebar & routing
+    localStorage.setItem("user", JSON.stringify(res.data.user));
+
       navigate("/dashboard"); // dashboard redirect
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");

@@ -26,8 +26,12 @@ import EditTransactionModal from "./components/Modals/EditTransactionModal";
 import UpdateApplicationModal from "./components/Modals/UpdateApplicationModal";
 import UpdateExternalClientModal from "./components/Modals/UpdateExternalClientModal";
 import AddCSVUpload from "./components/Modals/AddCSVUpload";
+import AttendancePage from "./pages/Attendance/AttendancePage";
+import AdminAttendance from "./pages/Attendance/AdminAttendance";
+import { Navigate } from "react-router-dom";
 
 function App() {
+   const user = JSON.parse(localStorage.getItem("user"));
   const router = createBrowserRouter([
     {
     path: "/",
@@ -64,9 +68,24 @@ function App() {
         { path: "/dashboard/services/applications", element: <Applications /> },
         { path:"/dashboard/services/applications/updateAplicaiton/:id",element:<UpdateApplicationModal/>},
         { path:"/dashboard/services/applications/addapplication",element:<ApplicationModal/>},
-         
+              // Attendance
+{
+  path: "/dashboard/attendance",
+  element:
+    user?.role === "admin" ? (
+      <Navigate to="/dashboard/admin/attendance" />
+    ) : (
+      <AttendancePage />
+    ),
+},
+{
+  path: "/dashboard/admin/attendance",
+  element: <AdminAttendance />,
+},
+
+       
       ],
-    },
+    },  
   ]);
 
   return <RouterProvider router={router} />;

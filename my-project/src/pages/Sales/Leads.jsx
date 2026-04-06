@@ -68,7 +68,9 @@ const fetchCallStats = async () => {
         },
       );
 
-      setLeads(res.data.leads.reverse() || []);
+      setLeads(
+  res.data.leads.sort((a, b) => b.leadNumber - a.leadNumber)
+);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
