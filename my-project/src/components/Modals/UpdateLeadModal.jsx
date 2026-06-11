@@ -12,11 +12,15 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
   // 🔹 State for entire form
   const [formData, setFormData] = useState({
     leadOwner: "Admin",
-    leadNumber:"",
+    leadNumber: "",
     account: "Atlas Study",
     entity: "",
     firstName: "",
     lastName: "",
+    highesteducation: "",
+    interestate: "",
+    age: "",
+    program: "",
     dob: "",
     passport: "",
     nationality: "",
@@ -38,7 +42,7 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
     type: "",
     responsible: "",
     refType: "",
-    referredBy: "",
+    referredBy: "", //Interested subject
     nextAction: "",
     nextActionDate: "",
     agentPromo: "",
@@ -56,7 +60,7 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
-          }
+          },
         );
 
         const lead = res.data?.lead || res.data;
@@ -95,7 +99,7 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
-        }
+        },
       );
       console.log("Lead updated:", res.data);
       onClose();
@@ -128,9 +132,8 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
 
         {/* FORM */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-
           {/* Lead Owner */}
-          <div >
+          <div>
             <label className="font-bold text-sm">Lead Owner</label>
             <input
               name="leadOwner"
@@ -141,16 +144,16 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
             />
           </div>
           <div>
-          <label className="block mb-1 font-bold text-sm sm:text-base">
-            leadNumber
-          </label>
-          <input
-            name="leadNumber"
-            value={formData.leadNumber}
-            onChange={handleChange}
-            className={inputBase}
-          />
-        </div>
+            <label className="block mb-1 font-bold text-sm sm:text-base">
+              leadNumber
+            </label>
+            <input
+              name="leadNumber"
+              value={formData.leadNumber}
+              onChange={handleChange}
+              className={inputBase}
+            />
+          </div>
 
           {/* Account */}
           <div>
@@ -191,15 +194,13 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
               className={inputBase}
             />
           </div>
-          <div>
-            <label className="font-bold text-sm">Last Name</label>
-            <input
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              className={inputBase}
-            />
-          </div>
+          <label className="font-bold text-sm">Highest Education</label>
+          <input
+            name="highesteducation"
+            value={formData.highesteducation}
+            onChange={handleChange}
+            className={inputBase}
+          />
 
           {/* DOB & Passport */}
           <div>
@@ -273,19 +274,20 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
 
           {/* Emergency Contact */}
           <div>
-            <label className="font-bold text-sm">Emergency Contact Name</label>
+            <label className="font-bold text-sm">Interested Subject</label>
             <input
-              name="emergencyContact"
-              value={formData.emergencyContact}
+              name="interestate"
+              value={formData.interestate}
               onChange={handleChange}
               className={inputBase}
             />
           </div>
+
           <div>
-            <label className="font-bold text-sm">Emergency Phone</label>
+            <label className="font-bold text-sm">Age</label>
             <input
-              name="emergencyPhone"
-              value={formData.emergencyPhone}
+              name="age"
+              value={formData.age}
               onChange={handleChange}
               className={inputBase}
             />
@@ -318,14 +320,23 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
 
           {/* Police Station & District */}
           <div>
-            <label className="font-bold text-sm">Police Station</label>
-            <input
-              name="policeStation"
-              value={formData.policeStation}
-              onChange={handleChange}
-              className={inputBase}
-            />
-          </div>
+  <label className="font-bold text-sm">
+    Program
+  </label>
+
+  <select
+    name="program"
+    value={formData.program}
+    onChange={handleChange}
+    className={selectBase}
+  >
+    <option value="">Select Program</option>
+    <option>Bachelor</option>
+    <option>Master</option>
+    <option>PhD</option>
+    <option>Language</option>
+  </select>
+</div>
           <div>
             <label className="font-bold text-sm">District</label>
             <input
@@ -366,7 +377,9 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold text-sm">First Service Preference</label>
+            <label className="font-bold text-sm">
+              First Service Preference
+            </label>
             <select
               name="firstServicePref"
               value={formData.firstServicePref}
@@ -379,7 +392,9 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold text-sm">Second Service Preference</label>
+            <label className="font-bold text-sm">
+              Second Service Preference
+            </label>
             <select
               name="secondServicePref"
               value={formData.secondServicePref}
@@ -474,7 +489,7 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
             </select>
           </div>
           <div>
-            <label className="font-bold text-sm">Referred By</label>
+            <label className="font-bold text-sm">Interested subject</label>
             <input
               name="referredBy"
               value={formData.referredBy}
@@ -567,7 +582,6 @@ const UpdateLeadModal = ({ isOpen, onClose, id }) => {
               Update Lead
             </button>
           </div>
-
         </div>
       </motion.div>
     </div>

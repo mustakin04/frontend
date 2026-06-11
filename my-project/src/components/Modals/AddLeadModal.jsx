@@ -5,13 +5,17 @@ import { motion } from "framer-motion";
 const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
   const initialState = {
     leadOwner: "",
-    leadNumber:"",
+    leadNumber: "",
     account: "Atlas Study",
     entity: "",
     firstName: "",
-    lastName: "",
+    lastName: "", //Highest Education
+    highesteducation: "",
+    interestate: "",
+    age: "",
+    program: "", //update
     dob: "",
-    passport: "",  
+    passport: "",
     nationality: "",
     civilStatus: "",
     email: "",
@@ -31,7 +35,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
     type: "",
     responsible: "",
     refType: "",
-    referredBy: "",
+    referredBy: "", //Interested subject
     nextAction: "",
     nextActionDate: "",
     agentPromo: "",
@@ -59,7 +63,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
           {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             withCredentials: true,
-          }
+          },
         );
         const user = res.data?.user || res.data;
         if (user) {
@@ -87,7 +91,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    console.log("listnumber",formData)
+    console.log("listnumber", formData);
     try {
       const token = localStorage.getItem("token");
 
@@ -98,7 +102,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
         nextActionDate: formData.nextActionDate
           ? new Date(formData.nextActionDate)
           : null,
-          stage: formData.stageCustom ? formData.stageCustom : formData.stage,
+        stage: formData.stageCustom ? formData.stageCustom : formData.stage,
       };
 
       const res = await axios.post(
@@ -107,7 +111,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
-        }
+        },
       );
 
       onAddLead(res.data.lead || res.data);
@@ -150,7 +154,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
         )}
 
         {/* Lead Owner */}
-        <div >
+        <div>
           <label className="block mb-1 font-bold text-sm sm:text-base">
             Lead Owner
           </label>
@@ -211,12 +215,12 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
           />
         </div>
         <div>
-          <label className="block mb-1 font-bold text-sm sm:text-base">
-            Last Name
-          </label>
+          {/* {" "}
+          //change korechi */}
+          <label>Highest Education</label>
           <input
-            name="lastName"
-            value={formData.lastName}
+            name="highesteducation"
+            value={formData.highesteducation}
             onChange={handleChange}
             className={inputBase}
           />
@@ -312,25 +316,25 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
           />
         </div>
 
-        {/* Emergency Contact */}
+        {/* Emergency Contact  Interested Subject */}
         <div>
           <label className="block mb-1 font-bold text-sm sm:text-base">
-            Emergency Contact Name
+            Interested Subject
           </label>
           <input
-            name="emergencyContact"
-            value={formData.emergencyContact}
+            name="interestate"
+            value={formData.interestate}
             onChange={handleChange}
             className={inputBase}
           />
         </div>
         <div>
-          <label className="block mb-1 font-bold text-sm sm:text-base">
-            Emergency Phone
-          </label>
+          {/* age */}
+          <label className="block mb-1 font-bold">Age</label>
+
           <input
-            name="emergencyPhone"
-            value={formData.emergencyPhone}
+            name="age"
+            value={formData.age}
             onChange={handleChange}
             className={inputBase}
           />
@@ -367,16 +371,23 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
           />
         </div>
         <div>
-          <label className="block mb-1 font-bold text-sm sm:text-base">
-            Police Station
-          </label>
-          <input
-            name="policeStation"
-            value={formData.policeStation}
-            onChange={handleChange}
-            className={inputBase}
-          />
-        </div>
+  <label className="block mb-1 font-bold">
+    Program
+  </label>
+
+  <select
+    name="program"
+    value={formData.program}
+    onChange={handleChange}
+    className={selectBase}
+  >
+    <option value="">Select Program</option>
+    <option>Bachelor</option>
+    <option>Master</option>
+    <option>PhD</option>
+    <option>Language</option>
+  </select>
+</div>
         <div>
           <label className="block mb-1 font-bold text-sm sm:text-base">
             District
@@ -474,31 +485,31 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
 
         {/* Stage */}
         {/* Stage: Select + Input */}
-<div>
-  <label className="font-bold text-sm">Stage</label>
-  <div className="flex gap-2">
-    <select
-      name="stage"
-      value={formData.stage}
-      onChange={handleChange}
-      className={selectBase + " flex-1"}
-    >
-      <option value="">Select Stage</option>
-      <option>New</option>
-      <option>In Progress</option>
-      <option>Closed</option>
-    </select>
+        <div>
+          <label className="font-bold text-sm">Stage</label>
+          <div className="flex gap-2">
+            <select
+              name="stage"
+              value={formData.stage}
+              onChange={handleChange}
+              className={selectBase + " flex-1"}
+            >
+              <option value="">Select Stage</option>
+              <option>New</option>
+              <option>In Progress</option>
+              <option>Closed</option>
+            </select>
 
-    <input
-      type="text"
-      name="stageCustom"
-      placeholder="Or type stage"
-      value={formData.stageCustom || ""}
-      onChange={handleChange}
-      className={inputBase + " flex-1"}
-    />
-  </div>
-</div>
+            <input
+              type="text"
+              name="stageCustom"
+              placeholder="Or type stage"
+              value={formData.stageCustom || ""}
+              onChange={handleChange}
+              className={inputBase + " flex-1"}
+            />
+          </div>
+        </div>
 
         {/* Type */}
         <div>
@@ -554,7 +565,7 @@ const AddLeadModal = ({ isOpen, onClose, onAddLead }) => {
         {/* Referred By */}
         <div>
           <label className="block mb-1 font-bold text-sm sm:text-base">
-            Referred By
+            Interested subject
           </label>
           <input
             name="referredBy"

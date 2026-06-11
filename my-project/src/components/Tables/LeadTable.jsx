@@ -32,7 +32,7 @@ const Tooltip = ({ text }) => {
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="w-[140px] truncate text-gray-700 cursor-default"
+        className="w-[120px] truncate text-gray-700 cursor-default"
       >
         {text}
       </div>
@@ -55,46 +55,54 @@ const Tooltip = ({ text }) => {
   );
 };
 
+// ── Column group left-border colours (header + td must match) ──────────────
+const GROUP = {
+  meta:     "border-l-2 border-l-slate-300",
+  identity: "border-l-2 border-l-violet-300",
+  contact:  "border-l-2 border-l-sky-300",
+  stage:    "border-l-2 border-l-amber-300",
+  personal: "border-l-2 border-l-emerald-300",
+  location: "border-l-2 border-l-rose-300",
+  service:  "border-l-2 border-l-orange-300",
+};
+
 const LeadTable = ({ leads }) => {
   const headers = [
-    // "#",
-    "#",
-    "Actions",
-    "First Name",
-    "Highest Education",
-    "Passport",
-    "Phone",
-    "Stage",
-    "Next Action",
-    "Next Action Date",
-    "call count",
-    "Description",
-    "Email",
-    "Address",
-    "Account",
-    "Entity",
-    "DOB",
-
-    "Nationality",
-    "Civil Status",
-    "Emergency Contact",
-    "Emergency Phone",
-    "Current Location",
-    "Police Station",
-    "District",
-    "Responsible Type",
-    "Pref Service",
-    "First Service Pref",
-    "Second Service Pref",
-    "Campaign Code",
-    "Type",
-    "Responsible",
-    "Referral Type",
-    "Referred By",
-
-    "Agent Promo",
-    "Active",
-    "Lead Owner",
+    { label: "#",                  group: "meta"     },
+    { label: "Actions",            group: "meta"     },
+    { label: "First Name",         group: "identity" },
+    { label: "Highest Education",  group: "identity" },
+    { label: "Passport",           group: "identity" },
+    { label: "Phone",              group: "contact"  },
+    { label: "Stage",              group: "stage"    },
+    { label: "Next Action",        group: "stage"    },
+    { label: "Next Action Date",   group: "stage"    },
+    { label: "Call Count",         group: "stage"    },
+    { label: "Description",        group: "stage"    },
+    { label: "Email",              group: "contact"  },
+    { label: "Address",            group: "contact"  },
+    { label: "Account",            group: "identity" },
+    { label: "Entity",             group: "identity" },
+    { label: "DOB",                group: "personal" },
+    { label: "Nationality",        group: "personal" },
+    { label: "Civil Status",       group: "personal" },
+    { label: "Interested Subject",  group: "identity" },
+    { label: "Age",    group: "personal" },
+    { label: "Current Location",   group: "location" },
+    { label: "Program",     group: "identity" },
+    { label: "District",           group: "location" },
+    { label: "Responsible Type",   group: "service"  },
+    { label: "Pref Service",       group: "service"  },
+    { label: "First Service Pref", group: "service"  },
+    { label: "Second Service Pref",group: "service"  },
+    { label: "Campaign Code",      group: "meta"     },
+    { label: "Type",               group: "meta"     },
+    { label: "Responsible",        group: "meta"     },
+    { label: "Referral Type",      group: "meta"     },
+    { label: "Interested Subject", group: "meta"     },
+    { label: "Agent Promo",        group: "meta"     },
+    { label: "Active",             group: "meta"     },
+    { label: "Lead Owner",         group: "meta"     },
   ];
 
   const [showEye, setShowEye] = useState(false);
@@ -109,7 +117,6 @@ const LeadTable = ({ leads }) => {
   const handleCallLog = async (leadId) => {
     try {
       const token = localStorage.getItem("token");
-      //  console.log(leadId,'allsdjkuy')
       await axios.patch(
         `https://crm-api.iatlasstudy.com/api/v1/lead/add-call/${leadId}`,
         {},
@@ -117,7 +124,6 @@ const LeadTable = ({ leads }) => {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         },
       );
-
       alert("Call logged ✅");
     } catch (err) {
       console.error(err);
@@ -173,16 +179,19 @@ const LeadTable = ({ leads }) => {
   };
 
   return (
-    <div className="relative w-full bg-white shadow rounded-xl h-f overflow-auto">
+    <div className="relative w-full bg-white shadow rounded-xl overflow-auto">
       <table className="min-w-full lg:min-w-[1600px] divide-y divide-gray-200 text-sm">
         <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>
-            {headers.map((header) => (
+            {headers.map(({ label, group }) => (
               <th
-                key={header}
-                className="px-2 py-2 sm:px-3 sm:py-2 md:px-4 md:py-3 text-left text-[9px] sm:text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                key={label}
+                className={clsx(
+                  "px-2 py-1.5 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap",
+                  GROUP[group],
+                )}
               >
-                {header}
+                {label}
               </th>
             ))}
           </tr>
@@ -198,141 +207,203 @@ const LeadTable = ({ leads }) => {
                   "hover:bg-gradient-to-r hover:from-indigo-100 hover:via-purple-100 hover:to-pink-100 transition-all duration-300",
                 )}
               >
-                {/* <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {idx + 1}
-                </td> */}
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
+                {/* # */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px] text-gray-500 font-mono", GROUP.meta)}>
                   {lead.leadNumber}
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap">
-                  <div className="flex gap-1 sm:gap-2">
+
+                {/* Actions */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap", GROUP.meta)}>
+                  <div className="flex gap-1">
                     <button
-                      className="text-green-500 hover:text-green-700 p-1"
+                      className="text-green-500 hover:text-green-700 p-0.5"
                       onClick={() => handleEye(lead._id)}
                     >
-                      <FiEye size={16} />
+                      <FiEye size={14} />
                     </button>
                     <button
-                      className="text-blue-500 hover:text-blue-700 p-1"
+                      className="text-blue-500 hover:text-blue-700 p-0.5"
                       onClick={() => handleEdit(lead._id)}
                     >
-                      <FiEdit2 size={16} />
+                      <FiEdit2 size={14} />
                     </button>
                     <button
-                      className="text-red-500 hover:text-red-700 p-1"
+                      className="text-red-500 hover:text-red-700 p-0.5"
                       onClick={() => handleDeleted(lead._id)}
                     >
-                      <FiTrash2 size={16} />
+                      <FiTrash2 size={14} />
                     </button>
                   </div>
                 </td>
 
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.firstName}
+                {/* First Name */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.identity)}>
+                  <Tooltip text={lead.firstName} />
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.lastName}
+
+                {/* Highest Education */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.identity)}>
+                  <Tooltip text={lead.highesteducation} />
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
+
+                {/* Passport */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.identity)}>
                   {lead.passport}
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
+
+                {/* Phone */}
+                <td className={clsx("px-3 py-1  text-[11px]", GROUP.contact)}>
                   {lead.phone}
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.stage}
+
+                {/* Stage */}
+                <td className={clsx("px-1 py-1 text-[11px]", GROUP.stage)}>
+                  <Tooltip text={lead.stage} />
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.nextAction}
+
+                {/* Next Action */}
+                <td className={clsx("px-1 py-1 text-[11px]", GROUP.stage)}>
+                  <Tooltip text={lead.nextAction} />
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
+
+                {/* Next Action Date */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.stage)}>
                   {lead.nextActionDate?.split("T")[0]}
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
+
+                {/* Call Count */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.stage)}>
                   <button
-                    className="text-purple-500 hover:text-purple-700 p-1"
+                    className="text-purple-500 hover:text-purple-700 p-0.5"
                     onClick={() => handleCallLog(lead._id)}
                   >
                     📞
                   </button>
                 </td>
-                {/* ✅ Description — Custom Tooltip on Hover */}
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 text-xs sm:text-sm">
+
+                {/* Description */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.stage)}>
                   <Tooltip text={lead.description} />
                 </td>
-                 <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.email}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.address}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.account}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.entity}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.dob}
-                </td>
-                {/* password */}
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.nationality}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.civilStatus}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.emergencyContact}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.emergencyPhone}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.currentLocation}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.policeStation}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.district}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.responsibleType}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.prefService}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.firstServicePref}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.secondServicePref}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.campaignCode}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.type}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.responsible}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.refType}
-                </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.referredBy}
+
+                {/* Email */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.contact)}>
+                  <Tooltip text={lead.email} />
                 </td>
 
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
+                {/* Address */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.contact)}>
+                  <Tooltip text={lead.address} />
+                </td>
+
+                {/* Account */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.identity)}>
+                  {lead.account}
+                </td>
+
+                {/* Entity */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.identity)}>
+                  {lead.entity}
+                </td>
+
+                {/* DOB */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.personal)}>
+                  {lead.dob}
+                </td>
+
+                {/* Nationality */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.personal)}>
+                  <Tooltip text={lead.nationality} />
+                </td>
+
+                {/* Civil Status */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.personal)}>
+                  {lead.civilStatus}
+                </td>
+
+                {/* Emergency Contact */}
+               <td className={clsx("px-2 py-1 text-[11px]", GROUP.identity)}>
+  <Tooltip text={lead.interestate} />
+</td>
+
+                {/* Emergency Phone */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.personal)}>
+  {lead.age}
+</td>
+
+                {/* Current Location */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.location)}>
+                  <Tooltip text={lead.currentLocation} />
+                </td>
+
+                {/* Police Station */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.identity)}>
+  <Tooltip text={lead.program} />
+</td>
+
+                {/* District */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.location)}>
+                  {lead.district}
+                </td>
+
+                {/* Responsible Type */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.service)}>
+                  {lead.responsibleType}
+                </td>
+
+                {/* Pref Service */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.service)}>
+                  {lead.prefService}
+                </td>
+
+                {/* First Service Pref */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.service)}>
+                  <Tooltip text={lead.firstServicePref} />
+                </td>
+
+                {/* Second Service Pref */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.service)}>
+                  <Tooltip text={lead.secondServicePref} />
+                </td>
+
+                {/* Campaign Code */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                  {lead.campaignCode}
+                </td>
+
+                {/* Type */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                  {lead.type}
+                </td>
+
+                {/* Responsible */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.meta)}>
+                  <Tooltip text={lead.responsible} />
+                </td>
+
+                {/* Referral Type */}
+                <td className={clsx("px-1 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                  {lead.refType}
+                </td>
+
+                {/* Interested Subject */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.meta)}>
+                  <Tooltip text={lead.referredBy} />
+                </td>
+
+                {/* Agent Promo */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
                   {lead.agentPromo}
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
+
+                {/* Active */}
+                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
                   {lead.active}
                 </td>
-                <td className="px-2 py-3 sm:px-4 md:px-6 md:py-4 whitespace-nowrap text-xs sm:text-sm">
-                  {lead.leadOwner}
+
+                {/* Lead Owner */}
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.meta)}>
+                  <Tooltip text={lead.leadOwner} />
                 </td>
               </tr>
             ))

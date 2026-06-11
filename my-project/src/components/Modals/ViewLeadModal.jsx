@@ -28,7 +28,7 @@ export default function ViewLeadModal({
 
   return (
     <div
-      className={`max-w-3xl mx-auto p-4 sm:p-6 rounded-2xl shadow-2xl bg-gradient-to-br from-indigo-50 via-white to-purple-50 border border-indigo-200 ${className}`}
+      className={`max-w-4xl mx-auto p-4 sm:p-6 rounded-2xl shadow-2xl bg-gradient-to-br from-indigo-50 via-white to-purple-50 border border-indigo-200 ${className}`}
     >
       <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
         {/* Avatar */}
@@ -40,7 +40,10 @@ export default function ViewLeadModal({
           {/* Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{fullName}</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                {fullName}
+              </h2>
+
               <p className="text-xs sm:text-sm text-gray-600 mt-1">
                 {lead.account || "—"} • {lead.type || "—"}
               </p>
@@ -58,7 +61,7 @@ export default function ViewLeadModal({
 
               {onClose && (
                 <button
-                  onClick={() => onClose(lead._id)}
+                  onClick={() => onClose()}
                   className="p-2 rounded-xl bg-red-100 text-red-700 hover:bg-red-200 shadow"
                 >
                   <X size={18} />
@@ -67,15 +70,21 @@ export default function ViewLeadModal({
             </div>
           </div>
 
-          {/* Contact / Personal / Service */}
+          {/* Main Cards */}
           <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Contact */}
-            <div className="bg-white/70 p-3 sm:p-4 rounded-xl shadow-sm border">
+            <div className="bg-white/70 p-4 rounded-xl shadow-sm border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Contact
               </h3>
-              <p className="mt-2 font-semibold text-base sm:text-lg">{lead.phone || "—"}</p>
-              <p className="text-xs sm:text-sm text-gray-600">{lead.email || "—"}</p>
+
+              <p className="mt-2 font-semibold text-base sm:text-lg">
+                {lead.phone || "—"}
+              </p>
+
+              <p className="text-xs sm:text-sm text-gray-600">
+                {lead.email || "—"}
+              </p>
 
               <div className="mt-3 flex flex-wrap gap-2">
                 {lead.phone && (
@@ -86,6 +95,7 @@ export default function ViewLeadModal({
                     <Phone size={14} /> Call
                   </a>
                 )}
+
                 {lead.email && (
                   <a
                     href={`mailto:${lead.email}`}
@@ -98,61 +108,125 @@ export default function ViewLeadModal({
             </div>
 
             {/* Personal */}
-            <div className="bg-white/70 p-3 sm:p-4 rounded-xl shadow-sm border">
+            <div className="bg-white/70 p-4 rounded-xl shadow-sm border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Personal
               </h3>
-              <p className="mt-2 font-semibold text-sm sm:text-base">
+
+              <p className="mt-2 font-semibold text-sm">
                 {lead.nationality || "—"} • {lead.civilStatus || "—"}
               </p>
-              <p className="text-xs sm:text-sm">DOB: {lead.dob || "—"}</p>
-              <p className="text-xs sm:text-sm">Passport: {lead.passport || "—"}</p>
+
+              <p className="text-xs sm:text-sm mt-1">
+                DOB: {lead.dob || "—"}
+              </p>
+
+              <p className="text-xs sm:text-sm">
+                Age: {lead.age || "—"}
+              </p>
+
+              <p className="text-xs sm:text-sm">
+                Passport: {lead.passport || "—"}
+              </p>
+
+              <p className="text-xs sm:text-sm">
+                Highest Education: {lead.highesteducation || "—"}
+              </p>
             </div>
 
             {/* Service */}
-            <div className="bg-white/70 p-3 sm:p-4 rounded-xl shadow-sm border">
+            <div className="bg-white/70 p-4 rounded-xl shadow-sm border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Service
               </h3>
-              <p className="mt-2 font-semibold text-sm sm:text-base">
+
+              <p className="mt-2 font-semibold text-sm">
                 {lead.prefService || "—"}
               </p>
-              <p className="text-xs sm:text-sm">Stage: {lead.stage || "—"}</p>
+
               <p className="text-xs sm:text-sm">
-                Responsible: {lead.responsible || "—"} (
-                {lead.responsibleType || "—"})
+                Program: {lead.program || "—"}
+              </p>
+
+              <p className="text-xs sm:text-sm">
+                Interest Area: {lead.interestate || "—"}
+              </p>
+
+              <p className="text-xs sm:text-sm">
+                Stage: {lead.stage || "—"}
+              </p>
+
+              <p className="text-xs sm:text-sm">
+                Responsible: {lead.responsible || "—"}
+              </p>
+            </div>
+          </div>
+
+          {/* Education & Interest */}
+          <div className="mt-4 sm:mt-6 bg-green-50 p-4 rounded-xl border">
+            <h3 className="text-xs uppercase text-green-700 font-bold">
+              Education & Interest
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+              <p className="text-sm">
+                <strong>Highest Education:</strong>{" "}
+                {lead.highesteducation || "—"}
+              </p>
+
+              <p className="text-sm">
+                <strong>Program:</strong>{" "}
+                {lead.program || "—"}
+              </p>
+
+              <p className="text-sm">
+                <strong>Interest Area:</strong>{" "}
+                {lead.interestate || "—"}
+              </p>
+
+              <p className="text-sm">
+                <strong>Age:</strong>{" "}
+                {lead.age || "—"}
               </p>
             </div>
           </div>
 
           {/* Location & Next Action */}
           <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <div className="bg-blue-50 p-3 sm:p-4 rounded-xl border">
+            <div className="bg-blue-50 p-4 rounded-xl border">
               <h3 className="text-xs uppercase text-blue-700 font-bold">
                 Location
               </h3>
-              <p className="mt-2 font-semibold text-sm sm:text-base">
+
+              <p className="mt-2 font-semibold">
                 {lead.currentLocation ||
                   lead.district ||
                   lead.address ||
                   "—"}
               </p>
+
               <p className="text-xs sm:text-sm">
                 Police Station: {lead.policeStation || "—"}
               </p>
+
+              <p className="text-xs sm:text-sm">
+                District: {lead.district || "—"}
+              </p>
             </div>
 
-            <div className="bg-purple-50 p-3 sm:p-4 rounded-xl border">
+            <div className="bg-purple-50 p-4 rounded-xl border">
               <h3 className="text-xs uppercase text-purple-700 font-bold">
                 Next Action
               </h3>
 
               <div className="flex items-center gap-3 mt-2">
                 <Calendar size={18} />
+
                 <div>
-                  <p className="font-semibold text-sm sm:text-base">
+                  <p className="font-semibold">
                     {lead.nextAction || "—"}
                   </p>
+
                   <p className="text-xs sm:text-sm">
                     {formatDate(lead.nextActionDate)}
                   </p>
@@ -160,38 +234,48 @@ export default function ViewLeadModal({
               </div>
 
               <p className="mt-3 text-xs sm:text-sm">
-                Created: {formatDate(lead.createdAt)} by{" "}
-                {lead.createdBy?.name || "—"}
+                Created: {formatDate(lead.createdAt)}
               </p>
+
               <p className="text-xs sm:text-sm">
                 Updated: {formatDate(lead.updatedAt)}
               </p>
             </div>
           </div>
 
-          {/* Notes */}
+          {/* Description */}
           {lead.description && (
-            <div className="mt-4 sm:mt-6 bg-white/70 p-3 sm:p-4 rounded-xl border">
+            <div className="mt-4 sm:mt-6 bg-white/70 p-4 rounded-xl border">
               <h3 className="text-xs uppercase text-gray-500 font-bold">
                 Notes
               </h3>
-              <p className="mt-2 text-sm sm:text-base">{lead.description}</p>
+
+              <p className="mt-2 text-sm">
+                {lead.description}
+              </p>
             </div>
           )}
 
           {/* Tags */}
-          <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
-            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-green-100 text-green-700">
+          <div className="mt-4 sm:mt-6 flex flex-wrap gap-2">
+            <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
               Active: {lead.active || "—"}
             </span>
-            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-yellow-100 text-yellow-700">
+
+            <span className="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
               Agent Promo: {lead.agentPromo || "—"}
             </span>
-            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-pink-100 text-pink-700">
+
+            <span className="px-3 py-1 text-xs rounded-full bg-pink-100 text-pink-700">
               Ref: {lead.refType || "—"} — {lead.referredBy || "—"}
             </span>
-            <span className="px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full bg-indigo-100 text-indigo-700">
+
+            <span className="px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700">
               Entity: {lead.entity || "—"}
+            </span>
+
+            <span className="px-3 py-1 text-xs rounded-full bg-cyan-100 text-cyan-700">
+              Lead Owner: {lead.leadOwner || "—"}
             </span>
           </div>
         </div>
