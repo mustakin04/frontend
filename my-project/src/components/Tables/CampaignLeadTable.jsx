@@ -7,6 +7,7 @@ const CampaignLeadsTable = () => {
   const [leads, setLeads] = useState([]);
 
   const [selectedProgram, setSelectedProgram] = useState("");
+  const [selectedUniversity, setSelectedUniversity] =useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -18,11 +19,11 @@ const CampaignLeadsTable = () => {
         );
 
         setLeads(res.data);
+        console.log(res.data);
       } catch (error) {
         console.error(error);
       }
     };
-
     fetchLeads();
   }, []);
 
@@ -34,20 +35,34 @@ const CampaignLeadsTable = () => {
         .filter(Boolean)
     ),
   ];
-
+  const universities = [
+  ...new Set(
+    leads
+      .map((lead) => lead.university)
+      .filter(Boolean)
+  ),
+];
   // Multi Filter
   const filteredLeads = leads.filter((lead) => {
     const leadDate = new Date(lead.createdAt);
 
     const matchesProgram =
       !selectedProgram || lead.program === selectedProgram;
-
+    const matchesUniversity =
+  !selectedUniversity ||
+  lead.university?.trim() === selectedUniversity.trim();
+  console.log(
+  lead.university,
+  selectedUniversity,
+  lead.university === selectedUniversity
+);
     const matchesDate =
       (!fromDate || leadDate >= new Date(fromDate)) &&
       (!toDate ||
         leadDate <= new Date(`${toDate}T23:59:59`));
 
-    return matchesProgram && matchesDate;
+    return matchesProgram && matchesDate &&
+  matchesUniversity;
   });
 
   // CSV Download
@@ -113,6 +128,27 @@ const CampaignLeadsTable = () => {
           ))}
         </select>
 
+        <select
+  value={selectedUniversity}
+  onChange={(e) =>
+    setSelectedUniversity(e.target.value)
+  }
+  className="border p-2 rounded"
+>
+  <option value="">
+    All Universities
+  </option>
+
+  {universities.map((university) => (
+    <option
+      key={university}
+      value={university}
+    >
+      {university}
+    </option>
+  ))}
+</select>
+
         <input
           type="date"
           value={fromDate}
@@ -133,10 +169,11 @@ const CampaignLeadsTable = () => {
 
         <button
           onClick={() => {
-            setSelectedProgram("");
-            setFromDate("");
-            setToDate("");
-          }}
+  setSelectedUniversity("");
+  setSelectedProgram("");
+  setFromDate("");
+  setToDate("");
+}}
           className="bg-red-500 text-white px-4 py-2 rounded"
         >
           Clear Filters
