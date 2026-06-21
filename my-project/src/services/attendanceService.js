@@ -12,7 +12,21 @@ API.interceptors.request.use((req) => {
 });
 
 // USER
-export const checkIn = () => API.post("/checkin");
+export const checkIn = async () => {
+   console.log("CHECKIN FUNCTION HIT");
+  const ipResponse = await fetch("https://api.ipify.org?format=json");
+  const { ip } = await ipResponse.json();
+  console.log("IP:", ip);
+  return API.post(
+    "/checkin",
+    {},
+    {
+      headers: {
+        "x-client-ip": ip,
+      },
+    }
+  );
+};
 export const checkOut = () => API.post("/checkout");
 export const getMyAttendance = () => API.get("/my");
 

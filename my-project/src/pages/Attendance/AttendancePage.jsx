@@ -72,17 +72,19 @@ const AttendancePage = () => {
   };
 
   return (
-  <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
-    
-    {/* 🔷 Header */}
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-md">
-      <h1 className="text-2xl font-bold">Attendance Dashboard</h1>
-      <p className="text-sm opacity-90 mt-1">
+  <div className="p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6 bg-gray-50 min-h-screen">
+
+    {/* Header */}
+    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-md">
+      <h1 className="text-xl md:text-2xl font-bold">
+        Attendance Dashboard
+      </h1>
+
+      <p className="text-xs md:text-sm opacity-90 mt-1">
         Welcome back 👋 Track your daily attendance easily
       </p>
     </div>
 
-    {/* 🔷 Attendance Card */}
     <AttendanceCard
       today={today}
       onCheckIn={handleCheckIn}
@@ -90,42 +92,47 @@ const AttendancePage = () => {
       loading={loading}
     />
 
-    {/* 🔷 Stats Section */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      
-      <div className="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition">
-        <p className="text-sm text-gray-500">Total Days</p>
-        <h2 className="text-2xl font-bold">{attendance.length}</h2>
-      </div>
+    {/* Stats */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-      <div className="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition">
-        <p className="text-sm text-gray-500">Present</p>
-        <h2 className="text-2xl font-bold text-green-600">
+      <div className="bg-white p-4 md:p-5 rounded-xl md:rounded-2xl shadow">
+        <p className="text-sm text-gray-500">Total Days</p>
+        <h2 className="text-xl md:text-2xl font-bold">
           {attendance.length}
-          {/* {attendance.filter(a => a.status === "Present").length} */}
         </h2>
       </div>
 
-      <div className="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition">
+      <div className="bg-white p-4 md:p-5 rounded-xl md:rounded-2xl shadow">
+        <p className="text-sm text-gray-500">Present</p>
+        <h2 className="text-xl md:text-2xl font-bold text-green-600">
+          {attendance.length}
+        </h2>
+      </div>
+
+      <div className="bg-white p-4 md:p-5 rounded-xl md:rounded-2xl shadow">
         <p className="text-sm text-gray-500">Total Hours</p>
-        <h2 className="text-2xl font-bold text-blue-600">
+        <h2 className="text-xl md:text-2xl font-bold text-blue-600">
           {attendance.reduce((acc, a) => acc + (a.workHours || 0), 0)} hrs
         </h2>
       </div>
 
     </div>
 
-    {/* 🔷 History Table */}
-    <div className="bg-white p-6 rounded-2xl shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Attendance History</h2>
-        <span className="text-sm text-gray-500">
+    {/* History */}
+    <div className="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-md">
+
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
+        <h2 className="text-lg md:text-xl font-semibold">
+          Attendance History
+        </h2>
+
+        <span className="text-xs md:text-sm text-gray-500">
           Last {attendance.length} records
         </span>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="min-w-[700px] w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-100 text-gray-600 text-sm">
               <th className="p-3 rounded-l-lg">Date</th>
@@ -142,9 +149,17 @@ const AttendancePage = () => {
                 key={a._id}
                 className="border-b hover:bg-gray-50 transition"
               >
-                <td className="p-3 font-medium">{a.date}</td>
-                <td className="p-3">{a.checkIn}</td>
-                <td className="p-3">{a.checkOut || "-"}</td>
+                <td className="p-3 font-medium whitespace-nowrap">
+                  {a.date}
+                </td>
+
+                <td className="p-3 whitespace-nowrap">
+                  {a.checkIn}
+                </td>
+
+                <td className="p-3 whitespace-nowrap">
+                  {a.checkOut || "-"}
+                </td>
 
                 <td className="p-3">
                   <span
@@ -158,7 +173,7 @@ const AttendancePage = () => {
                   </span>
                 </td>
 
-                <td className="p-3 font-semibold text-blue-600">
+                <td className="p-3 font-semibold text-blue-600 whitespace-nowrap">
                   {a.workHours ? `${a.workHours}h` : "-"}
                 </td>
               </tr>
@@ -166,6 +181,7 @@ const AttendancePage = () => {
           </tbody>
         </table>
       </div>
+
     </div>
   </div>
 );

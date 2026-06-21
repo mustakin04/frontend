@@ -8,6 +8,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  ResponsiveContainer,
 } from "recharts";
 
 const COLORS = ["#22c55e", "#eab308", "#ef4444"];
@@ -20,28 +21,39 @@ const AttendanceChart = ({ stats }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Bar Chart */}
-      <BarChart width={300} height={250} data={barData}>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="value" />
-      </BarChart>
+      <div className="w-full h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={barData}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="value" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       {/* Pie Chart */}
-      <PieChart width={300} height={250}>
-        <Pie
-          data={barData}
-          dataKey="value"
-          outerRadius={80}
-          label
-        >
-          {barData.map((entry, index) => (
-            <Cell key={index} fill={COLORS[index]} />
-          ))}
-        </Pie>
-      </PieChart>
+      <div className="w-full h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={barData}
+              dataKey="value"
+              cx="50%"
+              cy="50%"
+              outerRadius="70%"
+              label
+            >
+              {barData.map((entry, index) => (
+                <Cell key={index} fill={COLORS[index]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };
