@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3000/api/v1/attendance",
+  baseURL: "https://crm-api.iatlasstudy.com/api/v1/attendance",
 });
 
 // attach token
@@ -16,7 +16,7 @@ export const checkIn = async () => {
    console.log("CHECKIN FUNCTION HIT");
   const ipResponse = await fetch("https://api.ipify.org?format=json");
   const { ip } = await ipResponse.json();
-  console.log("IP:", ip);
+  // console.log("IP:", ip);
   return API.post(
     "/checkin",
     {},
