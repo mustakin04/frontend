@@ -2,19 +2,21 @@
 import { useState, useEffect } from "react";
 import { Bell, Menu } from "lucide-react";
 import axios from "axios";
+import ProfileModal from "./Profile/ProfileModal";
 
 const Navbar = ({ onMenuClick }) => {
   const [user, setUser] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          "https://crm-api.iatlasstudy.com/api/v1/authentication/me",
+          "https://crm-api.iatlasstudy.com/api/v1/users/get-me",
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
         setUser(res.data);
       } catch (err) {
@@ -28,7 +30,7 @@ const Navbar = ({ onMenuClick }) => {
   return (
     <div className="w-full h-16 bg-white shadow flex items-center justify-between px-4 md:px-6">
       {/* Mobile Menu Button */}
-      <button 
+      <button
         onClick={onMenuClick}
         className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
       >
@@ -53,7 +55,10 @@ const Navbar = ({ onMenuClick }) => {
         </button>
 
         {/* Profile */}
-        <div className="flex items-center gap-3 cursor-pointer">
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => setShowProfile(true)}
+        >
           <img
             src="https://i.pravatar.cc/40"
             alt="profile"
@@ -65,6 +70,12 @@ const Navbar = ({ onMenuClick }) => {
           </div>
         </div>
       </div>
+      <ProfileModal
+        open={showProfile}
+        onClose={() => setShowProfile(false)}
+        user={user}
+        onEdit={(updatedUser) => setUser(updatedUser)}
+      />
     </div>
   );
 };

@@ -8,7 +8,7 @@ export default function ViewLeadModal({
   className = "",
 }) {
   if (!lead || !lead._id) return null;
-
+  console.log("ViewLeadModal lead:", lead);
   const fullName =
     [lead.firstName, lead.middleName, lead.lastName]
       .filter(Boolean)
@@ -275,7 +275,7 @@ export default function ViewLeadModal({
             </span>
 
             <span className="px-3 py-1 text-xs rounded-full bg-cyan-100 text-cyan-700">
-              Lead Owner: {lead.leadOwner || "—"}
+              Lead Owner: {lead.createdBy?.name|| "—"}
             </span>
           </div>
         </div>

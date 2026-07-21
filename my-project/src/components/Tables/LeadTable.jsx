@@ -5,6 +5,7 @@ import axios from "axios";
 import ViewLeadModal from "../Modals/ViewLeadModal";
 import UpdateLeadModal from "../Modals/UpdateLeadModal";
 import DeleteLeadModal from "../Modals/DeleteLeadModal";
+import { FiPhone } from "react-icons/fi";
 
 // ✅ Custom Tooltip Component
 const Tooltip = ({ text }) => {
@@ -57,52 +58,52 @@ const Tooltip = ({ text }) => {
 
 // ── Column group left-border colours (header + td must match) ──────────────
 const GROUP = {
-  meta:     "border-l-2 border-l-slate-300",
+  meta: "border-l-2 border-l-slate-300",
   identity: "border-l-2 border-l-violet-300",
-  contact:  "border-l-2 border-l-sky-300",
-  stage:    "border-l-2 border-l-amber-300",
+  contact: "border-l-2 border-l-sky-300",
+  stage: "border-l-2 border-l-amber-300",
   personal: "border-l-2 border-l-emerald-300",
   location: "border-l-2 border-l-rose-300",
-  service:  "border-l-2 border-l-orange-300",
+  service: "border-l-2 border-l-orange-300",
 };
 
 const LeadTable = ({ leads }) => {
   const headers = [
-    { label: "#",                  group: "meta"     },
-    { label: "Actions",            group: "meta"     },
-    { label: "First Name",         group: "identity" },
-    { label: "Highest Education",  group: "identity" },
-    { label: "Passport",           group: "identity" },
-    { label: "Phone",              group: "contact"  },
-    { label: "Stage",              group: "stage"    },
-    { label: "Next Action",        group: "stage"    },
-    { label: "Next Action Date",   group: "stage"    },
-    { label: "Call Count",         group: "stage"    },
-    { label: "Description",        group: "stage"    },
-    { label: "Email",              group: "contact"  },
-    { label: "Address",            group: "contact"  },
-    { label: "Account",            group: "identity" },
-    { label: "Entity",             group: "identity" },
-    { label: "DOB",                group: "personal" },
-    { label: "Nationality",        group: "personal" },
-    { label: "Civil Status",       group: "personal" },
-    { label: "Interested Subject",  group: "identity" },
-    { label: "Age",    group: "personal" },
-    { label: "Current Location",   group: "location" },
-    { label: "Program",     group: "identity" },
-    { label: "District",           group: "location" },
-    { label: "Responsible Type",   group: "service"  },
-    { label: "Pref Service",       group: "service"  },
-    { label: "First Service Pref", group: "service"  },
-    { label: "Second Service Pref",group: "service"  },
-    { label: "Campaign Code",      group: "meta"     },
-    { label: "Type",               group: "meta"     },
-    { label: "Responsible",        group: "meta"     },
-    { label: "Referral Type",      group: "meta"     },
-    { label: "Interested Subject", group: "meta"     },
-    { label: "Agent Promo",        group: "meta"     },
-    { label: "Active",             group: "meta"     },
-    { label: "Lead Owner",         group: "meta"     },
+    { label: "#", group: "meta" },
+    { label: "Actions", group: "meta" },
+    { label: "First Name", group: "identity" },
+    { label: "Highest Education", group: "identity" },
+    { label: "Passport", group: "identity" },
+    { label: "Phone", group: "contact" },
+    { label: "Stage", group: "stage" },
+    { label: "Next Action", group: "stage" },
+    { label: "Next Action Date", group: "stage" },
+    { label: "Call Count", group: "stage" },
+    { label: "Description", group: "stage" },
+    { label: "Email", group: "contact" },
+    { label: "Address", group: "contact" },
+    { label: "Account", group: "identity" },
+    { label: "Entity", group: "identity" },
+    { label: "DOB", group: "personal" },
+    { label: "Nationality", group: "personal" },
+    { label: "Civil Status", group: "personal" },
+    { label: "Interested Subject", group: "identity" },
+    { label: "Age", group: "personal" },
+    { label: "Current Location", group: "location" },
+    { label: "Program", group: "identity" },
+    { label: "District", group: "location" },
+    { label: "Responsible Type", group: "service" },
+    { label: "Pref Service", group: "service" },
+    { label: "First Service Pref", group: "service" },
+    { label: "Second Service Pref", group: "service" },
+    { label: "Campaign Code", group: "meta" },
+    { label: "Type", group: "meta" },
+    { label: "Responsible", group: "meta" },
+    { label: "Referral Type", group: "meta" },
+    { label: "Interested Subject", group: "meta" },
+    { label: "Agent Promo", group: "meta" },
+    { label: "Active", group: "meta" },
+    { label: "Lead Owner", group: "meta" },
   ];
 
   const [showEye, setShowEye] = useState(false);
@@ -113,6 +114,9 @@ const LeadTable = ({ leads }) => {
   const [deleteShow, setDeleteShow] = useState(false);
   const [deleteID, setDeleteID] = useState(null);
   const [confirm, setConfirm] = useState("");
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [calledButtons, setCalledButtons] = useState({});
+  const [selectedLead, setSelectedLead] = useState(null);
 
   const handleCallLog = async (leadId) => {
     try {
@@ -124,6 +128,10 @@ const LeadTable = ({ leads }) => {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         },
       );
+      setCalledButtons((prev) => ({
+        ...prev,
+        [leadId]: true, // অথবা !prev[leadId] দিলে toggle হবে
+      }));
       alert("Call logged ✅");
     } catch (err) {
       console.error(err);
@@ -139,6 +147,10 @@ const LeadTable = ({ leads }) => {
   const handleEye = (id) => {
     setShowEye(true);
     setEyeID(id);
+  };
+
+  const handleRowClick = (id) => {
+    setSelectedRow((prev) => (prev === id ? null : id));
   };
 
   useEffect(() => {
@@ -160,6 +172,28 @@ const LeadTable = ({ leads }) => {
     };
     fetchSingleClient();
   }, [eyeID]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Enter = View Lead
+      if (e.key === "Enter" && selectedLead) {
+        handleEye(selectedLead._id);
+      }
+
+      // Esc = Close সব Modal
+      if (e.key === "Escape") {
+        closeModal();
+        closeEditModal();
+        closeDeleted();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedLead]);
 
   const closeEditModal = () => {
     setShowEdit(false);
@@ -201,14 +235,28 @@ const LeadTable = ({ leads }) => {
           {leads && leads.length > 0 ? (
             leads.map((lead, idx) => (
               <tr
-                key={lead.id || idx}
+                key={lead._id}
+                onClick={() => {
+                  handleRowClick(lead._id);
+                  setSelectedLead(lead);
+                }}
                 className={clsx(
-                  idx % 2 === 0 ? "bg-white" : "bg-gray-50",
-                  "hover:bg-gradient-to-r hover:from-indigo-100 hover:via-purple-100 hover:to-pink-100 transition-all duration-300",
+                  selectedRow === lead._id
+                    ? "bg-indigo-100"
+                    : idx % 2 === 0
+                      ? "bg-white"
+                      : "bg-gray-50",
+
+                  "cursor-pointer hover:bg-gradient-to-r hover:from-indigo-100 hover:via-purple-100 hover:to-pink-100 transition-all duration-300",
                 )}
               >
                 {/* # */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px] text-gray-500 font-mono", GROUP.meta)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px] text-gray-500 font-mono",
+                    GROUP.meta,
+                  )}
+                >
                   {lead.leadNumber}
                 </td>
 
@@ -247,7 +295,12 @@ const LeadTable = ({ leads }) => {
                 </td>
 
                 {/* Passport */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.identity)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.identity,
+                  )}
+                >
                   {lead.passport}
                 </td>
 
@@ -267,18 +320,32 @@ const LeadTable = ({ leads }) => {
                 </td>
 
                 {/* Next Action Date */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.stage)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.stage,
+                  )}
+                >
                   {lead.nextActionDate?.split("T")[0]}
                 </td>
 
                 {/* Call Count */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.stage)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.stage,
+                  )}
+                >
                   <button
-                    className="text-purple-500 hover:text-purple-700 p-0.5"
-                    onClick={() => handleCallLog(lead._id)}
-                  >
-                    📞
-                  </button>
+  onClick={() => handleCallLog(lead._id)}
+  className={
+    lead.callLogs?.length > 0
+      ? "text-green-600"
+      : "text-purple-600"
+  }
+>
+  <FiPhone size={16} />
+</button>
                 </td>
 
                 {/* Description */}
@@ -297,17 +364,32 @@ const LeadTable = ({ leads }) => {
                 </td>
 
                 {/* Account */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.identity)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.identity,
+                  )}
+                >
                   {lead.account}
                 </td>
 
                 {/* Entity */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.identity)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.identity,
+                  )}
+                >
                   {lead.entity}
                 </td>
 
                 {/* DOB */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.personal)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.personal,
+                  )}
+                >
                   {lead.dob}
                 </td>
 
@@ -317,19 +399,29 @@ const LeadTable = ({ leads }) => {
                 </td>
 
                 {/* Civil Status */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.personal)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.personal,
+                  )}
+                >
                   {lead.civilStatus}
                 </td>
 
                 {/* Emergency Contact */}
-               <td className={clsx("px-2 py-1 text-[11px]", GROUP.identity)}>
-  <Tooltip text={lead.interestate} />
-</td>
+                <td className={clsx("px-2 py-1 text-[11px]", GROUP.identity)}>
+                  <Tooltip text={lead.interestate} />
+                </td>
 
                 {/* Emergency Phone */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.personal)}>
-  {lead.age}
-</td>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.personal,
+                  )}
+                >
+                  {lead.age}
+                </td>
 
                 {/* Current Location */}
                 <td className={clsx("px-2 py-1 text-[11px]", GROUP.location)}>
@@ -338,21 +430,36 @@ const LeadTable = ({ leads }) => {
 
                 {/* Police Station */}
                 <td className={clsx("px-2 py-1 text-[11px]", GROUP.identity)}>
-  <Tooltip text={lead.program} />
-</td>
+                  <Tooltip text={lead.program} />
+                </td>
 
                 {/* District */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.location)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.location,
+                  )}
+                >
                   {lead.district}
                 </td>
 
                 {/* Responsible Type */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.service)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.service,
+                  )}
+                >
                   {lead.responsibleType}
                 </td>
 
                 {/* Pref Service */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.service)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.service,
+                  )}
+                >
                   {lead.prefService}
                 </td>
 
@@ -367,12 +474,22 @@ const LeadTable = ({ leads }) => {
                 </td>
 
                 {/* Campaign Code */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.meta,
+                  )}
+                >
                   {lead.campaignCode}
                 </td>
 
                 {/* Type */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.meta,
+                  )}
+                >
                   {lead.type}
                 </td>
 
@@ -382,7 +499,12 @@ const LeadTable = ({ leads }) => {
                 </td>
 
                 {/* Referral Type */}
-                <td className={clsx("px-1 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                <td
+                  className={clsx(
+                    "px-1 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.meta,
+                  )}
+                >
                   {lead.refType}
                 </td>
 
@@ -392,12 +514,22 @@ const LeadTable = ({ leads }) => {
                 </td>
 
                 {/* Agent Promo */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.meta,
+                  )}
+                >
                   {lead.agentPromo}
                 </td>
 
                 {/* Active */}
-                <td className={clsx("px-2 py-1 whitespace-nowrap text-[11px]", GROUP.meta)}>
+                <td
+                  className={clsx(
+                    "px-2 py-1 whitespace-nowrap text-[11px]",
+                    GROUP.meta,
+                  )}
+                >
                   {lead.active}
                 </td>
 

@@ -7,7 +7,9 @@ const CampaignLeadsTable = () => {
   const [leads, setLeads] = useState([]);
 
   const [selectedProgram, setSelectedProgram] = useState("");
-  const [selectedUniversity, setSelectedUniversity] =useState("");
+  const [selectedBackground, setSelectedBackground] = useState("");
+  const [selectedUniversity, setSelectedUniversity] = useState("");
+  const [selectedPassport, setSelectedPassport]=useState("")
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -15,54 +17,52 @@ const CampaignLeadsTable = () => {
     const fetchLeads = async () => {
       try {
         const res = await axios.get(
-          "https://api.iatlasstudy.com/api/lead/getleads"
+          "https://api.iatlasstudy.com/api/lead/getleads",
         );
 
         setLeads(res.data);
-        console.log(res.data);
+        console.log(res.data, "campainlead");
       } catch (error) {
         console.error(error);
       }
     };
     fetchLeads();
   }, []);
-
+   
   // Unique Programs
   const programs = [
-    ...new Set(
-      leads
-        .map((lead) => lead.program)
-        .filter(Boolean)
-    ),
+    ...new Set(leads.map((lead) => lead.program).filter(Boolean)),
   ];
   const universities = [
-  ...new Set(
-    leads
-      .map((lead) => lead.university)
-      .filter(Boolean)
-  ),
-];
+    ...new Set(leads.map((lead) => lead.university).filter(Boolean)),
+  ];
+  const backgrounds = [
+    ...new Set(leads.map((lead) => lead.background).filter(Boolean)),
+  ];
+  const passports = [...new Set(leads.map((lead) => lead.passport).filter(Boolean))];
   // Multi Filter
   const filteredLeads = leads.filter((lead) => {
     const leadDate = new Date(lead.createdAt);
 
-    const matchesProgram =
-      !selectedProgram || lead.program === selectedProgram;
+    const matchesProgram = !selectedProgram || lead.program === selectedProgram;
+
     const matchesUniversity =
-  !selectedUniversity ||
-  lead.university?.trim() === selectedUniversity.trim();
-  console.log(
-  lead.university,
-  selectedUniversity,
-  lead.university === selectedUniversity
-);
+      !selectedUniversity ||
+      lead.university?.trim() === selectedUniversity.trim();
+
+    const matchesBackground =
+      !selectedBackground || lead.background === selectedBackground;
+
+    const matchesPassport=
+    !selectedPassport || lead.passport===selectedPassport
+
     const matchesDate =
       (!fromDate || leadDate >= new Date(fromDate)) &&
-      (!toDate ||
-        leadDate <= new Date(`${toDate}T23:59:59`));
+      (!toDate || leadDate <= new Date(`${toDate}T23:59:59`));
 
-    return matchesProgram && matchesDate &&
-  matchesUniversity;
+    return (
+      matchesProgram && matchesUniversity && matchesBackground && matchesPassport && matchesDate
+    );
   });
 
   // CSV Download
@@ -113,67 +113,84 @@ const CampaignLeadsTable = () => {
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-4">
         <select
-          value={selectedProgram}
-          onChange={(e) =>
-            setSelectedProgram(e.target.value)
-          }
+          value={selectedPassport}
+          onChange={(e) => setSelectedPassport(e.target.value)}
           className="border p-2 rounded"
         >
-          <option value="">All Programs</option>
+          <option value="">All Passport</option>
 
-          {programs.map((program) => (
-            <option key={program} value={program}>
+          {passports.map((passport) => (
+            <option key={passport} value={passport}>
+              {passport}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedBackground}
+          onChange={(e) => setSelectedBackground(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">All Backgrounds</option>
+
+          {backgrounds.map((background) => (
+            <option key={background} value={background}>
+              {background}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedBackground}
+          onChange={(e) => setSelectedBackground(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">All Program</option>
+
+          {programs.map((program)=>(
+            <option key={program}value={program}>
               {program}
             </option>
           ))}
         </select>
 
         <select
-  value={selectedUniversity}
-  onChange={(e) =>
-    setSelectedUniversity(e.target.value)
-  }
-  className="border p-2 rounded"
->
-  <option value="">
-    All Universities
-  </option>
+          value={selectedUniversity}
+          onChange={(e) => setSelectedUniversity(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">All Universities</option>
 
-  {universities.map((university) => (
-    <option
-      key={university}
-      value={university}
-    >
-      {university}
-    </option>
-  ))}
-</select>
+          {universities.map((university) => (
+            <option key={university} value={university}>
+              {university}
+            </option>
+          ))}
+        </select>
 
         <input
           type="date"
           value={fromDate}
-          onChange={(e) =>
-            setFromDate(e.target.value)
-          }
+          onChange={(e) => setFromDate(e.target.value)}
           className="border p-2 rounded"
         />
 
         <input
           type="date"
           value={toDate}
-          onChange={(e) =>
-            setToDate(e.target.value)
-          }
+          onChange={(e) => setToDate(e.target.value)}
           className="border p-2 rounded"
         />
 
         <button
           onClick={() => {
-  setSelectedUniversity("");
-  setSelectedProgram("");
-  setFromDate("");
-  setToDate("");
-}}
+            setSelectedUniversity("");
+            setSelectedProgram("");
+            setFromDate("");
+            setSelectedBackground("");
+            setSelectedPassport("")
+            setToDate("");
+          }}
           className="bg-red-500 text-white px-4 py-2 rounded"
         >
           Clear Filters
@@ -189,17 +206,11 @@ const CampaignLeadsTable = () => {
               <th className="border p-2">Phone</th>
               <th className="border p-2">Address</th>
               <th className="border p-2">Passport</th>
-              <th className="border p-2">
-                Highest Education
-              </th>
-              <th className="border p-2">
-                Description
-              </th>
+              <th className="border p-2">Highest Education</th>
+              <th className="border p-2">Description</th>
               <th className="border p-2">Age</th>
               <th className="border p-2">Program</th>
-              <th className="border p-2">
-                Interested Subject
-              </th>
+              <th className="border p-2">Interested Subject</th>
               <th className="border p-2">Date</th>
             </tr>
           </thead>
@@ -207,50 +218,24 @@ const CampaignLeadsTable = () => {
           <tbody>
             {filteredLeads.length > 0 ? (
               filteredLeads.map((lead) => (
-                <tr
-                  key={lead._id}
-                  className="text-center"
-                >
+                <tr key={lead._id} className="text-center">
+                  <td className="border p-2">{lead.name}</td>
+                  <td className="border p-2">{lead.phone}</td>
+                  <td className="border p-2">{lead.location}</td>
+                  <td className="border p-2">{lead.passport}</td>
+                  <td className="border p-2">{lead.background}</td>
+                  <td className="border p-2">{lead.gpa}</td>
+                  <td className="border p-2">{lead.age}</td>
+                  <td className="border p-2">{lead.program}</td>
+                  <td className="border p-2">{lead.subject}</td>
                   <td className="border p-2">
-                    {lead.name}
-                  </td>
-                  <td className="border p-2">
-                    {lead.phone}
-                  </td>
-                  <td className="border p-2">
-                    {lead.location}
-                  </td>
-                  <td className="border p-2">
-                    {lead.passport}
-                  </td>
-                  <td className="border p-2">
-                    {lead.background}
-                  </td>
-                  <td className="border p-2">
-                    {lead.gpa}
-                  </td>
-                  <td className="border p-2">
-                    {lead.age}
-                  </td>
-                  <td className="border p-2">
-                    {lead.program}
-                  </td>
-                  <td className="border p-2">
-                    {lead.subject}
-                  </td>
-                  <td className="border p-2">
-                    {new Date(
-                      lead.createdAt
-                    ).toLocaleDateString()}
+                    {new Date(lead.createdAt).toLocaleDateString()}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="10"
-                  className="text-center p-4"
-                >
+                <td colSpan="10" className="text-center p-4">
                   No leads found
                 </td>
               </tr>

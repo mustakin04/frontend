@@ -30,6 +30,18 @@ import AttendancePage from "./pages/Attendance/AttendancePage";
 import AdminAttendance from "./pages/Attendance/AdminAttendance";
 import { Navigate } from "react-router-dom";
 import CampaignLeadsTable from "./components/Tables/CampaignLeadTable";
+import TaskDashboard from "./pages/Task/TaskDashboard";
+import MyTasks from "./pages/Task/MyTasks";
+import AllTasks from "./pages/Task/AllTasks";
+import CreateTask from "./pages/Task/CreateTask";
+import Reports from "./pages/Task/Reports";
+import CompletedTasks from "./pages/Task/CompletedTasks";
+import TaskDetails from "./pages/Task/TaskDetails";
+import ActivityLogs from "./pages/Task/ActivityLogs";
+import EditTask from "./pages/Task/EditTask";
+import TaskHistory from "./pages/Task/TaskHistory";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -42,6 +54,8 @@ function App() {
       path: "/login",
       element: <Login />,
     },
+    { path:"/forgot-password", element: <ForgotPassword/>},
+    { path:"/reset-password", element: <ResetPassword/>},
     {
       path: "/dashboard",
       element: (
@@ -106,6 +120,67 @@ function App() {
         {
           path: "/dashboard/admin/attendance",
           element: <AdminAttendance />,
+        },
+
+        // Task Management
+
+        {
+          path: "/dashboard/task-management",
+          element:
+            user?.role === "admin" ? (
+              <TaskDashboard></TaskDashboard>
+            ) : (
+              <MyTasks></MyTasks>
+            ),
+        },
+
+        // Admin Routes
+
+        {
+          path: "/dashboard/task-management/all",
+          element: <AllTasks />,
+        },
+
+        {
+          path: "/dashboard/task-management/create",
+          element: <CreateTask />,
+        },
+
+        {
+          path: "/dashboard/task-management/activity",
+          element: <ActivityLogs />,
+        },
+
+        {
+          path: "/dashboard/task-management/reports",
+          element: <Reports />,
+        },
+
+        // Employee Routes
+
+        {
+          path: "/dashboard/task-management/my-tasks",
+          element: <MyTasks></MyTasks>,
+        },
+
+        {
+          path: "/dashboard/task-management/completed",
+          element: <CompletedTasks />,
+        },
+        {
+          path: "/dashboard/task-management/edit/:id",
+          element: <EditTask />,
+        },
+
+        {
+          path: "/dashboard/task-management/history",
+          element: <TaskHistory />,
+        },
+
+        // Common
+        {
+          path: "/dashboard/task-management/:id",
+          element: <TaskDetails></TaskDetails>,
         },
         {
           path: "/dashboard/campaignlead",

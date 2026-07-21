@@ -7,8 +7,17 @@ import {
   FiLayers,
   FiFileText,
   FiX,
+  FiCheckSquare,
+  FiCalendar,
 } from "react-icons/fi";
+import { MdFingerprint, MdOutlineWorkHistory } from "react-icons/md";
+import { HiCheckBadge } from "react-icons/hi2";
 import { FiTrendingUp } from "react-icons/fi";
+import { FaTasks } from "react-icons/fa";
+import { IoIosCreate } from "react-icons/io";
+import { FcParallelTasks } from "react-icons/fc";
+
+import { TbReport, TbReportAnalytics } from "react-icons/tb";
 import logo from "../assets/Atlas.png";
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -32,9 +41,11 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r h-full transition-transform duration-300 lg:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed lg:static inset-y-0 left-0 z-50
+  w-64 bg-slate-50 border-r border-slate-200
+  h-screen overflow-y-auto shadow-xl
+  transition-all duration-300
+  ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         <div className="p-4">
           {/* Close button for mobile */}
@@ -106,22 +117,108 @@ const Sidebar = ({ isOpen, onClose }) => {
               <FiFileText /> Applications
             </NavLink>
 
+            {/* Task Management */}
+            <p className="text-xs font-bold text-gray-500 mt-4">
+              TASK MANAGEMENT
+            </p>
+
             {user?.role === "admin" ? (
-              <NavLink to="/dashboard/admin/attendance">
-                Admin Attendance
-              </NavLink>
+              <>
+                <NavLink
+                  to="/dashboard/task-management"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <FiCheckSquare />
+                  Task Dashboard
+                </NavLink>
+
+                <NavLink
+                  to="/dashboard/task-management/all"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <FcParallelTasks />
+                  All Tasks
+                </NavLink>
+
+                <NavLink
+                  to="/dashboard/task-management/create"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <IoIosCreate />
+                  Create Task
+                </NavLink>
+
+                <NavLink
+                  to="/dashboard/task-management/activity"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <TbReportAnalytics />
+                  Activity Logs
+                </NavLink>
+
+                <NavLink
+                  to="/dashboard/task-management/reports"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <TbReport />
+                  Reports
+                </NavLink>
+              </>
             ) : (
-              <NavLink to="/dashboard/attendance">Attendance</NavLink>
+              <>
+                <NavLink
+                  to="/dashboard/task-management/my-tasks"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <FaTasks />
+                  My Tasks
+                </NavLink>
+
+                <NavLink
+                  to="/dashboard/task-management/completed"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <HiCheckBadge className="text-xl" />
+                  Completed Tasks
+                </NavLink>
+
+                <NavLink
+                  to="/dashboard/task-management/history"
+                  className={({ isActive }) => (isActive ? active : linkClass)}
+                >
+                  <MdOutlineWorkHistory className="text-xl" />
+                  Task History
+                </NavLink>
+              </>
             )}
-            <NavLink
-              to="/dashboard/campaignlead"
-              className={({ isActive }) => (isActive ? active : linkClass)}
-              onClick={onClose}
-            >
-             <FiTrendingUp />  campaign lead
-            </NavLink>
           </nav>
         </div>
+        {/* Attendance */}
+        {user?.role === "admin" ? (
+          <NavLink
+            to="/dashboard/admin/attendance"
+            className={({ isActive }) => (isActive ? active : linkClass)}
+            onClick={onClose}
+          >
+            <MdFingerprint className="text-2xl" /> Admin Attendance
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/dashboard/attendance"
+            className={({ isActive }) => (isActive ? active : linkClass)}
+            onClick={onClose}
+          >
+            <MdFingerprint className="text-2xl" /> Attendance
+          </NavLink>
+        )}
+
+        <NavLink
+          to="/dashboard/campaignlead"
+          className={({ isActive }) => (isActive ? active : linkClass)}
+          onClick={onClose}
+        >
+          <FiTrendingUp /> campaign lead
+        </NavLink>
       </div>
     </>
   );
